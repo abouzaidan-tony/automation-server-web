@@ -1,5 +1,5 @@
 /.vscode/
 /.settings/
 /target/
-/settings.json
 .DS_Store
+jdbc.properties

@@ -1,0 +1,23 @@
+<beans:beans xmlns="http://www.springframework.org/schema/security" xmlns:beans="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.springframework.org/schema/beans
+	http://www.springframework.org/schema/beans/spring-beans-4.3.xsd
+	http://www.springframework.org/schema/security
+	http://www.springframework.org/schema/security/spring-security-4.2.xsd">
+
+    <http auto-config="true">
+        <intercept-url pattern="/j_spring_security_check" access="permitAll()" />
+        <intercept-url pattern="/accessdenied" access="permitAll()" />
+        <intercept-url pattern="/" access="permitAll()" />
+        <intercept-url pattern="/signup" access="permitAll()" />
+        <intercept-url pattern="/account/**" access="hasRole('ROLE_USER')" />
+        <form-login login-page="/login" default-target-url="/account" username-parameter="username" password-parameter="password"
+            authentication-failure-url="/login?error=true" 
+            always-use-default-target="true" />
+        <logout logout-success-url="/logout" />
+        <csrf/>
+    </http>
+
+    <authentication-manager>
+        <authentication-provider ref="accountAuthenticationProvider"/>
+    </authentication-manager>
+
+</beans:beans>

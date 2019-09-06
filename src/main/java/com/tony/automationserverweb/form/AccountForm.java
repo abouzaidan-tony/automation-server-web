@@ -79,7 +79,6 @@ public class AccountForm implements Form<Account> {
         return account;
     }
 
-
     public String getUserEmail() {
         return userEmail;
     }

@@ -96,7 +96,7 @@ jQuery("#btnAddDeviceKey").click(function () {
     var token = jQuery("meta[name='_csrf']").attr("content");
     var count = jQuery('#devices-table tbody tr').length + 1
     jQuery.ajax({
-        url: 'acount/device/add',
+        url: 'account/device/add',
         type: 'POST',
         dataType: 'json',
         contentType: 'application/json; charset=utf-8',

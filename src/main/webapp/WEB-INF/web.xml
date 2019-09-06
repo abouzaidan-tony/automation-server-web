@@ -42,5 +42,15 @@
         <url-pattern>/*</url-pattern>
     </filter-mapping>
 
+    <security-constraint>
+        <web-resource-collection>
+            <web-resource-name>Entire Application</web-resource-name>
+            <url-pattern>/*</url-pattern>
+        </web-resource-collection>
+        <user-data-constraint>
+            <transport-guarantee>CONFIDENTIAL</transport-guarantee>
+        </user-data-constraint>
+    </security-constraint>
+
     <resources mapping="/resources/**" location="/resources/" cache-period="604800" />
 </web-app>

@@ -145,4 +145,5 @@ function getErrorMsg(data){
     for(var i in data){
         str += data[i]+'\n'
     }
+    return str;
 }

@@ -42,7 +42,7 @@ jQuery('body').on('click', '.removeDevice', function () {
         success: function (data) {
             var success = data['success'];
             if (success != true) {
-                alert(data['data']);
+                alert(getErrorMsg(data['data']));
                 return;
             }
             row.remove()
@@ -69,7 +69,7 @@ jQuery('body').on('click', '.removeUser', function () {
         success: function (data) {
             var success = data['success'];
             if (success != true) {
-                alert(data['data']);
+                alert(getErrorMsg(data['data']));
                 return;
             }
             row.remove()
@@ -105,7 +105,7 @@ jQuery("#btnAddDeviceKey").click(function () {
         success: function (data) {
             var success = data['success'];
             if (success != true) {
-                alert(data['data']);
+                alert(getErrorMsg(data['data']));
                 return;
             }
             table.append("<tr><td class=\"deviceCount\"> " + count + "</td><td class=\"deviceKey\"> " + _deviceKey + "</td><td><span class=\"dot red\"></span></td> <td> <button class=\"btn btn-danger removeDevice\">Remove Device</button></td></tr>");
@@ -132,10 +132,17 @@ jQuery("#btnAddUserKey").click(function () {
         success: function (data) {
             var success = data['success'];
             if (success != true) {
-                alert(data['data']);
+                alert(getErrorMsg(data['data']));
                 return;
             }
             table.append("<tr><td class=\"deviceCount\"> " + count + "</td><td class=\"deviceKey\"> " + _deviceKey + "</td><td><span class=\"dot red\"></span></td> <td> <button class=\"btn btn-danger removeUser\">Remove Use</button></td></tr>");
         }
     })
 })
+
+function getErrorMsg(data){
+    var str = "";
+    for(var i in data){
+        str += data[i]+'\n'
+    }
+}

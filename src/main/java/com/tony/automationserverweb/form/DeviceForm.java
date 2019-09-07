@@ -37,8 +37,8 @@ public class DeviceForm implements Form<Device> {
             return;
         validated = true;
 
-        if (deviceKey != null && deviceKey.length() != 10)
-            errors.put("deviceKey", "Device Key must be 10 characters");
+        if (deviceKey != null && deviceKey.length() != 5)
+            errors.put("deviceKey", "Device Key must be 5 characters");
     }
 
     public Device fill(){

@@ -143,7 +143,7 @@ jQuery("#btnAddUserKey").click(function () {
 function getErrorMsg(data){
     var str = "";
     for(var i in data){
-        str += data[i]+'\n'
+        str += data[i]
     }
     return str;
 }

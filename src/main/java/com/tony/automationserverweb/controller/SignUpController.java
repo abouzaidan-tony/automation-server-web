@@ -4,6 +4,7 @@ import com.tony.automationserverweb.exception.ApplicationException;
 import com.tony.automationserverweb.form.AccountForm;
 import com.tony.automationserverweb.model.Account;
 import com.tony.automationserverweb.service.AccountService;
+import com.tony.automationserverweb.service.MailService;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -20,6 +21,9 @@ public class SignUpController {
 
     @Autowired
     private AccountService accountService;
+
+    @Autowired
+    private MailService mailService;
 
     @GetMapping
     public ModelAndView signUpPage(){
@@ -41,6 +45,7 @@ public class SignUpController {
 
         try{
             accountService.createAccount(account);
+            mailService.sendMail(account.getEmail(), "Account Verification", "Please verify you account");
             return "login";
 
         }catch(ApplicationException ex){

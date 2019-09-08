@@ -1,7 +1,10 @@
 package com.tony.automationserverweb.controller;
 
+import javax.servlet.http.HttpServletRequest;
+
 import com.tony.automationserverweb.exception.ApplicationException;
 import com.tony.automationserverweb.form.AccountForm;
+import com.tony.automationserverweb.form.VerificationForm;
 import com.tony.automationserverweb.model.Account;
 import com.tony.automationserverweb.service.AccountService;
 import com.tony.automationserverweb.service.MailService;
@@ -23,7 +26,7 @@ public class SignUpController {
     private AccountService accountService;
 
     @Autowired
-    private MailService mailService;
+    private HttpServletRequest request;
 
     @GetMapping
     public ModelAndView signUpPage(){
@@ -45,14 +48,46 @@ public class SignUpController {
 
         try{
             accountService.createAccount(account);
-            mailService.sendMail(account.getEmail(), "Account Verification", "Please verify you account");
-            return "login";
+            request.getSession().setAttribute("account", account);
+            return "redirect:/signup/verify";
 
         }catch(ApplicationException ex){
             model.addAttribute("error", ex.getMessage());
         }
         
         return "signup";
-       
+    }
+    
+
+    @GetMapping("/verify")
+    public ModelAndView verifyAccountPage(@ModelAttribute("verifyForm") VerificationForm verificationForm, Model model) {
+        Account account = (Account) request.getSession().getAttribute("account");
+
+        if (account == null)
+            return new ModelAndView("redirect:/login");
+
+        return new ModelAndView("verifyAccount", "verifyForm", new VerificationForm());
+    }
+
+    @PostMapping("/verify")
+    public String verifyAccountRequest(@ModelAttribute("verifyForm") VerificationForm verificationForm, Model model){
+
+        Account account = (Account) request.getSession().getAttribute("account");
+
+        if(account == null)
+            return "redirect:/login";
+
+        if (verificationForm.hasErrors()) {
+            model.addAttribute("errors", verificationForm.getErrors());
+            return "verifyAccount";
+        }
+
+        if(accountService.verifyAccount(account, verificationForm.fill()))
+        {
+            request.getSession().removeAttribute("account");
+            return "redirect:/login";
+        }
+        model.addAttribute("error", "Wrong Code");
+        return "verifyAccount";
     }
 }

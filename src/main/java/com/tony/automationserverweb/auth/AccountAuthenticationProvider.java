@@ -38,7 +38,8 @@ public class AccountAuthenticationProvider implements AuthenticationProvider {
             throw new BadCredentialsException("Authentication failed for " + email);
 
         List<GrantedAuthority> grantedAuthorities = new ArrayList<>();
-        grantedAuthorities.add(new SimpleGrantedAuthority("ROLE_USER"));
+        if(user.getOtp() == null)
+            grantedAuthorities.add(new SimpleGrantedAuthority("ROLE_USER"));
         Authentication auth = new UsernamePasswordAuthenticationToken(user.getId(), user.getPasswordHash(), grantedAuthorities);
         return auth;
     }

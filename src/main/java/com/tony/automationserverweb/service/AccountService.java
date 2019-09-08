@@ -27,14 +27,41 @@ public class AccountService {
     @Autowired
     private UserRepositoryImpl userRepositoryImpl;
 
+    @Autowired
+    private MailService mailService;
+
     public Account createAccount(Account account){
         account.setPasswordHash(Encode(account.getPasswordHash()));
         account.setToken(accountRepositoryImpl.generateUniqueToken());
         Integer count = accountRepositoryImpl.getCountUsersByEmail(account.getEmail());
+        sendAccountVerification(account, false);
         if(count != 0)
             throw new EmailAlreadyExistsException();
         account = accountRepositoryImpl.insert(account);
+
         return account;
+    }
+
+    public void sendAccountVerification(Account account, boolean save){
+        if(account == null)
+            return;
+        String otp = generateOTP();
+        account.setOtp(otp);
+        try{
+            mailService.sendMail(account.getEmail(), "Account Verification", "Please use this code : " + otp + " to verify your account\n\nThank you!");
+        }catch(Exception ex){}
+
+        if(save)
+            accountRepositoryImpl.update(account);
+    }
+
+    public boolean verifyAccount(Account account, String otp)
+    {
+        if(!account.getOtp().equals(otp))
+            return false;
+        account.setOtp(null);
+        accountRepositoryImpl.update(account);
+        return true;
     }
 
     public void addUser(Account account, User device) {
@@ -127,6 +154,18 @@ public class AccountService {
     public static boolean EncodingMatches(String password, String encodedPassword){
         BCryptPasswordEncoder encoder = new BCryptPasswordEncoder(4);
         return encoder.matches(password, encodedPassword);
+    }
+
+    private static final String ALPHA_NUMERIC_STRING = "0123456789";
+
+    private static String generateOTP() {
+        StringBuilder builder = new StringBuilder();
+        int count = 5;
+        while (count-- != 0) {
+            int character = (int) (Math.random() * ALPHA_NUMERIC_STRING.length());
+            builder.append(ALPHA_NUMERIC_STRING.charAt(character));
+        }
+        return builder.toString();
     }
 
 

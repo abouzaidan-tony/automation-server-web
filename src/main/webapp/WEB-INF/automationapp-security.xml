@@ -9,12 +9,15 @@
         <intercept-url pattern="/" access="permitAll()" />
         <intercept-url pattern="/signup" access="permitAll()" />
         <intercept-url pattern="/account/**" access="hasRole('ROLE_USER')" />
-        <form-login login-page="/login" default-target-url="/account" username-parameter="username" password-parameter="password"
-            authentication-failure-url="/login?error=true" 
-            always-use-default-target="true" />
+        <intercept-url pattern="/signup/verify" access="isAuthenticated()" />
+        <form-login login-page="/login" authentication-success-handler-ref="authenticationSuccessHandler"
+            username-parameter="username" password-parameter="password"
+            authentication-failure-url="/login?error=true"/>
         <logout logout-success-url="/logout" />
         <csrf/>
     </http>
+
+    <beans:bean id="authenticationSuccessHandler" class="com.tony.automationserverweb.auth.RedirectAuthenticationSuccessHandler" />
 
     <authentication-manager>
         <authentication-provider ref="accountAuthenticationProvider"/>

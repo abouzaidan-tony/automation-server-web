@@ -36,6 +36,9 @@ public class AccountRepositoryImpl implements IRepository<Account, Long> {
     private DeviceRepositoryImpl deviceRepositoryImpl;
 
     @Autowired
+    private UserRepositoryImpl userRepositoryImpl;
+
+    @Autowired
     private UserRowMapper userRowMapper;
 
     @Autowired
@@ -45,9 +48,9 @@ public class AccountRepositoryImpl implements IRepository<Account, Long> {
     private DeviceRowMapper deviceRowMapper;
 
     private static final String countQuery = "SELECT count(*) FROM account WHERE email = ?";
-    private static final String insertQuery = "INSERT INTO account (email, password, token, nickname) VALUES (?, ?, ?, ?)";
-    private static final String updateQuery = "UPDATE account SET email = ?, password = ?, token = ?, nickname = ? WHERE id = ?";
-    private static final String selectQuery = "SELECT account.id account_id, nickname, email, password, token, device.id device_id, device_key, device.connected d_connected, user.id user_id, user_key, user.connected u_connected FROM account LEFT JOIN device ON account.id = device.account_id LEFT JOIN user ON account.id = user.account_id ";
+    private static final String insertQuery = "INSERT INTO account (email, password, token, nickname, otp) VALUES (?, ?, ?, ?, ?)";
+    private static final String updateQuery = "UPDATE account SET email = ?, password = ?, token = ?, nickname = ?, otp = ? WHERE id = ?";
+    private static final String selectQuery = "SELECT account.id account_id, nickname, email, password, token, otp, device.id device_id, device_key, device.connected d_connected, user.id user_id, user_key, user.connected u_connected FROM account LEFT JOIN device ON account.id = device.account_id LEFT JOIN user ON account.id = user.account_id ";
     private static final String uniqueTokenQuery = "SELECT COUNT(*) FROM account WHERE token = ?";
 
     @Override
@@ -61,12 +64,19 @@ public class AccountRepositoryImpl implements IRepository<Account, Long> {
             ps.setString(2, object.getPasswordHash());
             ps.setString(3, object.getToken());
             ps.setString(4, object.getNickname());
+            ps.setString(5, object.getOtp());
             return ps;
         }, keyHolder);
+
         object.setId(keyHolder.getKey().longValue());
+
         for (Device d : object.getDevices()) {
             d.setAccount(object);
             deviceRepositoryImpl.insert(d);
+        }
+        for (User d : object.getUsers()) {
+            d.setAccount(object);
+            userRepositoryImpl.insert(d);
         }
         return object;
     }
@@ -79,7 +89,8 @@ public class AccountRepositoryImpl implements IRepository<Account, Long> {
             ps.setString(2, object.getPasswordHash());
             ps.setString(3, object.getToken());
             ps.setString(4, object.getNickname());
-            ps.setLong(5, object.getId());
+            ps.setString(5, object.getOtp());
+            ps.setLong(6, object.getId());
             return ps;
         });
         return object;

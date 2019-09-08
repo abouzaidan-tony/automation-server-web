@@ -22,6 +22,8 @@ public class Account {
 
     private List<User> users;
 
+    private String otp;
+
     public Account() {
         devices = new ArrayList<>();
         users = new ArrayList<>();
@@ -81,5 +83,13 @@ public class Account {
 
     public void setId(long id) {
         this.id = id;
+    }
+
+    public String getOtp() {
+        return otp;
+    }
+
+    public void setOtp(String otp) {
+        this.otp = otp;
     }
 }

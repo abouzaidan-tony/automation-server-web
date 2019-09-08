@@ -33,6 +33,7 @@
                 <a href="#" class="list-group-item list-group-item-action bg-light" data-for-page="page3">Users</a>
                 <a href="#" class="list-group-item list-group-item-action bg-light" data-for-page="page4">Statistics</a>
                 <a href="#" class="list-group-item list-group-item-action bg-light" data-for-page="page5">Help</a>
+                <a href="#" class="list-group-item list-group-item-action bg-light" data-for-page="page6">Developers</a>
                 <!-- <a href="#" class="list-group-item list-group-item-action bg-light">Overview</a>
                 <a href="#" class="list-group-item list-group-item-action bg-light">Events</a>
                 <a href="#" class="list-group-item list-group-item-action bg-light">Profile</a>
@@ -188,18 +189,18 @@
                                     <c:if test="${device.connected == true}">
                                         <span class="dot green"></span>
                                     </c:if>
-            
+
                                     <c:if test="${device.connected == false}">
                                         <span class="dot red"></span>
                                     </c:if>
-            
+
                                 </td>
                                 <td>
                                     <button class="btn btn-danger removeUser">Remove User</button>
                                 </td>
                             </tr>
                         </c:forEach>
-            
+
                     </tbody>
                 </table>
                 <table class="table">
@@ -209,7 +210,8 @@
                         </td>
                         <td>
                             <div class="form-group">
-                                <input type="text" class="form-control" id="userKeyInput" placeholder="Enter new user key">
+                                <input type="text" class="form-control" id="userKeyInput"
+                                    placeholder="Enter new user key">
                             </div>
                         </td>
                         <td>
@@ -230,7 +232,7 @@
                     This platform allows you to control your IoT device over the internet from you mobile device.<br>
 
                     What you have to do ? <br>
-                    
+
                     <ul>
                         <li>
                             Set up the mobile app that you are using by entering the
@@ -243,11 +245,12 @@
                                 </li>
                             </ol>
                             The user key is the unique identifier of a mobile device.<br>
-                            Currently, you can Control your IoT devices from 1 mobile device. (for each account)<br>
-                            More users to be allows later on per account.<br>
+                            Currently, you can Control your IoT devices from 4 different mobile device. (for each
+                            account)<br>
                         </li>
                         <li>
-                            Create new Devices in the Devices Tab, by giving each device a Unique 'Key' (of 10 characters).
+                            Create new Devices in the Devices Tab, by giving each device a Unique 'Key' (of 10
+                            characters).
                             <br>
                             Currently, you can create up to 4 devices per account.
                         </li>
@@ -255,16 +258,118 @@
                             Configure the TOKEN on the IoT device and the "Device Key" for each device.
                         </li>
                         <li>
-                            After setting up the required codes, you can access anytime the Devices Tab to check the availability of your devices.
+                            After setting up the required codes, you can access anytime the Devices Tab to check the
+                            availability of your devices.
+                        </li>
+                        <li>
+                            Communication can only be made between a device and user. Users cannot communicate together.
+                            Same for devices.
+                        </li>
+                    </ul>
+                </p>
+            </div>
+
+            <div class="container-fluid page" id="page6">
+                <h2>Developers</h2>
+                <p>
+                    <ul>
+                        <li>
+                            You should allow users to sign up for an account on this website so you clients devices dont conflic.
+                        </li>
+                        <li>
+                            Unity Help:
+                            <ol>
+                                <li>
+                                    Initialize the session : <br>
+                                    <code>
+                                        session = new ClientSession("API Token Here", "Device Code Here");<br>
+                                    </code>
+                                </li>
+                                <li>
+                                    Set the events :<br>
+                                    <code>
+                                        session.OnConnected += Connected;<br>
+                                        session.onMessageReady += Receive;<br>
+                                        session.OnConnectionFailed += Failed;<br>
+                                    </code>
+                                    Where <code>Connected</code>, <code>Receive</code> and <code>Failed</code> are function to be defined
+                                </li>
+                                <li>
+                                    For sending Messages, build a message for sending it.<br>
+                                    <code>
+                                        Message m = new MessageBuilder()<br>
+                                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                                    .setMessgeType(MessageType.DATA)<br>
+                                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                                    .setMessage("HELLO")<br>
+                                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                                    .setToDeviceAddress("DESTINATION DEVICE CODE")<br>
+                                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                                    .build();<br>
+                                        session.sendMessage(m);<br>
+                                    </code>
+                                </li>
+                                <li>
+                                    To send binary data, build a binary message:<br>
+                                    <code>
+                                        byte[] messageBytes = {0x62, 0x69, 0x6e, 0x61, 0x72, 0x79, 0x20, 0x74, 0x65, 0x78, 0x74};<br>
+                                        Message msg = new MessageBuilder()<br>
+                                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                                    .setMessgeType(MessageType.DATA)<br>
+                                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                                    .setMessage(messageBytes)<br>
+                                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                                    .setToDeviceAddress("DESTINATION DEVICE CODE")<br>
+                                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                                    .build();<br>
+                                        session.sendMessage(msg);<br>
+                                    </code>
+                                </li>
+                                <li>
+                                    To Receive a message: <br>
+                                    <code>
+                                        public void Receive(Message message){<br>
+                                        &nbsp;&nbsp;&nbsp;&nbsp;
+                                            switch(message.getType()){<br>
+                                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                                case MessageType.ERROR:<br>
+                                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                                    Debug.LogWarning(message.getDataAsString());<br>
+                                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                                    break;<br>
+                                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                                case MessageType.DATA:<br>
+                                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                                case MessageType.BROADCAST:<br>
+                                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                                    Debug.Log(message.getDataAsString());<br>
+                                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                                    break;<br>
+                                        &nbsp;&nbsp;&nbsp;&nbsp;
+                                            }<br>
+                                        }<br>
+                                    </code>
+                                </li>
+                                <li>
+                                    <span clas="red">Important note</span>, before to forget to disconnect when distroying the scene:<br>
+                                    <code>
+                                        public void OnDestroy(){<br>
+                                        &nbsp;&nbsp;&nbsp;&nbsp;
+                                            session.Disconnect();<br>
+                                        }<br>
+                                    </code>
+                                </li>
+                                <li>
+                                    <code>session.isConnected()</code> checks if you are still connected or not.
+                                </li>
+                            </ol>
                         </li>
                     </ul>
                 </p>
             </div>
         </div>
-        <!-- /#page-content-wrapper -->
 
     </div>
-    <!-- /#wrapper -->
 
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
         integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
@@ -272,6 +377,6 @@
 
     <script src="<c:url value="/resources/js/account.js" />" >
     </script>
-</body> 
+</body>
 
 </html>

@@ -364,6 +364,64 @@
                                 </li>
                             </ol>
                         </li>
+                        <li>
+                            Arduino Helper:
+                            <ol>
+                                <li>
+                                    Create a WiFiClient Object and DeviceSession object as follow:<br>
+                                    <code>
+                                        WiFiClient client;<br>
+                                        DeviceSession session(client, "API TOKEN", "DEVICE CODE");
+                                    </code>
+                                </li>
+                                <li>
+                                    Connect to WIFI: <br>
+                                    <code>
+                                        WiFi.mode(WIFI_STA);<br>
+                                        WiFi.begin(SSID, PASSWORD);<br>
+                                        while(WiFi.status() != WL_CONNECTED);<br>
+                                    </code>
+                                </li>
+                                <li>
+                                    Subscribe to receiving messages:<br>
+                                    <code>
+                                        session.setOnMessageReceived(OnMessageReceived);<br>
+                                    </code>
+                                    and <code>OnMessageReceived</code> is defined as follow :<br>
+                                    <code>
+                                        void OnMessageReceived(Message * message){<br>
+                                            &nbsp;&nbsp;&nbsp;&nbsp;int length = message->getDataLength();
+                                            &nbsp;&nbsp;&nbsp;&nbsp;char * data = message->getData();
+                                            &nbsp;&nbsp;&nbsp;&nbsp; for(int i=0; i&#60;length; i++)
+                                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Serial.println(data[i]);
+                                            &nbsp;&nbsp;&nbsp;&nbsp;Serial.println("");
+                                        }
+                                    </code>
+                                </li>
+                                <li>
+                                    Connect the session: <br>
+                                    <code>
+                                        bool result = session.connect();<br>
+                                        while(!result); //cannot initiate session <br>
+                                    </code>
+                                </li>
+                                <li>
+                                    In the loop function, call :<br>
+                                    <code>
+                                        session.update();
+                                    </code>
+                                </li>
+                                <li>
+                                    To send Message:<br>
+                                    <code>
+                                        int messageToSendLength = 15;<br>
+                                        bool keepAlive = true; // if set to false, the connection will be closed after this message.<br>
+                                        Message m(DATA, "DeviceCode", "Message to send", 15, keepAlive);<br>
+                                        session.sendMessage(m);
+                                    </code>
+                                </li>
+                            </ol>
+                        </li>
                     </ul>
                 </p>
             </div>

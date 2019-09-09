@@ -392,7 +392,7 @@
                                         void OnMessageReceived(Message * message){<br>
                                             &nbsp;&nbsp;&nbsp;&nbsp;int length = message->getDataLength();<br>
                                             &nbsp;&nbsp;&nbsp;&nbsp;char * data = message->getData();<br>
-                                            &nbsp;&nbsp;&nbsp;&nbsp; for(int i=0; i&#60;length; i++)<br>
+                                            &nbsp;&nbsp;&nbsp;&nbsp;for(int i=0; i&#60;length; i++)<br>
                                             &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Serial.println(data[i]);<br>
                                             &nbsp;&nbsp;&nbsp;&nbsp;Serial.println("");<br>
                                         }<br>

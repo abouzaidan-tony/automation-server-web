@@ -390,12 +390,12 @@
                                     and <code>OnMessageReceived</code> is defined as follow :<br>
                                     <code>
                                         void OnMessageReceived(Message * message){<br>
-                                            &nbsp;&nbsp;&nbsp;&nbsp;int length = message->getDataLength();
-                                            &nbsp;&nbsp;&nbsp;&nbsp;char * data = message->getData();
-                                            &nbsp;&nbsp;&nbsp;&nbsp; for(int i=0; i&#60;length; i++)
-                                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Serial.println(data[i]);
-                                            &nbsp;&nbsp;&nbsp;&nbsp;Serial.println("");
-                                        }
+                                            &nbsp;&nbsp;&nbsp;&nbsp;int length = message->getDataLength();<br>
+                                            &nbsp;&nbsp;&nbsp;&nbsp;char * data = message->getData();<br>
+                                            &nbsp;&nbsp;&nbsp;&nbsp; for(int i=0; i&#60;length; i++)<br>
+                                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Serial.println(data[i]);<br>
+                                            &nbsp;&nbsp;&nbsp;&nbsp;Serial.println("");<br>
+                                        }<br>
                                     </code>
                                 </li>
                                 <li>

@@ -47,7 +47,7 @@
 
                     <span>
                         A code is sent to your email, enter it here:<br>
-                        Please check your junk box too<br><br>
+                        Please check your junk box too<br>&nbsp;<br>&nbsp;<br>
                     </span>
 
                     <div class="wrap-input100 validate-input" data-validate="Minimum length is 3">
@@ -73,6 +73,13 @@
                         <button class="login100-form-btn">
                             Verify
                         </button>
+                    </div>
+
+                    <div class="text-center p-t-136">
+                        <a class="txt2" href="<c:url value="/login" /> ">
+                        Home
+                        <i class="fa fa-long-arrow-right m-l-5" aria-hidden="true"></i>
+                        </a>
                     </div>
 
                 </form:form>

@@ -9,7 +9,6 @@
         <intercept-url pattern="/" access="permitAll()" />
         <intercept-url pattern="/signup" access="permitAll()" />
         <intercept-url pattern="/account/**" access="hasRole('ROLE_USER')" />
-        <intercept-url pattern="/signup/verify" access="isAuthenticated()" />
         <form-login login-page="/login" authentication-success-handler-ref="authenticationSuccessHandler"
             username-parameter="username" password-parameter="password"
             authentication-failure-url="/login?error=true"/>

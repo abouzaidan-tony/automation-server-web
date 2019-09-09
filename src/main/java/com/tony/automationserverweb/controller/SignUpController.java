@@ -7,7 +7,6 @@ import com.tony.automationserverweb.form.AccountForm;
 import com.tony.automationserverweb.form.VerificationForm;
 import com.tony.automationserverweb.model.Account;
 import com.tony.automationserverweb.service.AccountService;
-import com.tony.automationserverweb.service.MailService;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -64,7 +63,7 @@ public class SignUpController {
         Account account = (Account) request.getSession().getAttribute("account");
 
         if (account == null)
-            return new ModelAndView("redirect:/login");
+            return new ModelAndView("redirect:/signup");
 
         return new ModelAndView("verifyAccount", "verifyForm", new VerificationForm());
     }

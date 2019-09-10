@@ -2,10 +2,9 @@ package com.tony.automationserverweb.auth;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import com.tony.automationserverweb.dao.AccountRepositoryImpl;
+import com.tony.automationserverweb.dao.DevAccountRepositoryImpl;
 import com.tony.automationserverweb.helper.Helper;
-import com.tony.automationserverweb.model.Account;
+import com.tony.automationserverweb.model.DevAccount;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationProvider;
@@ -18,18 +17,18 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.stereotype.Component;
 
 @Component
-public class AccountAuthenticationProvider implements AuthenticationProvider {
+public class DevAccountAuthenticationProvider implements AuthenticationProvider {
 
 
     @Autowired
-    private AccountRepositoryImpl accountRepositoryImpl;
+    private DevAccountRepositoryImpl devAccountRepositoryImpl;
 
     @Override
     public Authentication authenticate(Authentication authentication) throws AuthenticationException {
         String email = authentication.getName();
         String password = authentication.getCredentials().toString();
 
-        Account user = accountRepositoryImpl.getUserByEmail(email);
+        DevAccount user = devAccountRepositoryImpl.getDevAccountByEmail(email);
 
         if(user == null)
              throw new BadCredentialsException("Authentication failed for " + email);
@@ -39,7 +38,7 @@ public class AccountAuthenticationProvider implements AuthenticationProvider {
 
         List<GrantedAuthority> grantedAuthorities = new ArrayList<>();
         if(user.getOtp() == null)
-            grantedAuthorities.add(new SimpleGrantedAuthority("ROLE_USER"));
+            grantedAuthorities.add(new SimpleGrantedAuthority("ROLE_DEV"));
         Authentication auth = new UsernamePasswordAuthenticationToken(user.getId(), user.getPasswordHash(), grantedAuthorities);
         return auth;
     }

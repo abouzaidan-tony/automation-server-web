@@ -7,12 +7,12 @@ import com.tony.automationserverweb.exception.DuplicateDeviceKeyException;
 import com.tony.automationserverweb.exception.EmailAlreadyExistsException;
 import com.tony.automationserverweb.exception.MaximumDevicesReachedException;
 import com.tony.automationserverweb.exception.ResourceNotFoundException;
+import com.tony.automationserverweb.helper.Helper;
 import com.tony.automationserverweb.model.Account;
 import com.tony.automationserverweb.model.Device;
 import com.tony.automationserverweb.model.User;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -31,7 +31,7 @@ public class AccountService {
     private MailService mailService;
 
     public Account createAccount(Account account){
-        account.setPasswordHash(Encode(account.getPasswordHash()));
+        account.setPasswordHash(Helper.Encode(account.getPasswordHash()));
         account.setToken(accountRepositoryImpl.generateUniqueToken());
         Integer count = accountRepositoryImpl.getCountUsersByEmail(account.getEmail());
         sendAccountVerification(account, false);
@@ -45,7 +45,7 @@ public class AccountService {
     public void sendAccountVerification(Account account, boolean save){
         if(account == null)
             return;
-        String otp = generateOTP();
+        String otp = Helper.generateOTP();
         account.setOtp(otp);
         try{
             mailService.sendMail(account.getEmail(), "Account Verification", "Please use this code : " + otp + " to verify your account\n\nThank you!");
@@ -137,36 +137,4 @@ public class AccountService {
     public AccountRepositoryImpl getAccountRepositoryImpl() {
         return accountRepositoryImpl;
     }
-
-    public static String Encode(String pass){
-        BCryptPasswordEncoder encoder = new BCryptPasswordEncoder(4);
-        return encoder.encode(pass);
-        // try{
-        //     MessageDigest md = MessageDigest.getInstance("MD5");
-        //     md.update(pass.getBytes());
-        //     byte[] digest = md.digest();
-        //     return DatatypeConverter.printHexBinary(digest).toUpperCase();
-        // }catch(Exception ex){
-        //     return null;
-        // }
-    }
-
-    public static boolean EncodingMatches(String password, String encodedPassword){
-        BCryptPasswordEncoder encoder = new BCryptPasswordEncoder(4);
-        return encoder.matches(password, encodedPassword);
-    }
-
-    private static final String ALPHA_NUMERIC_STRING = "0123456789";
-
-    private static String generateOTP() {
-        StringBuilder builder = new StringBuilder();
-        int count = 5;
-        while (count-- != 0) {
-            int character = (int) (Math.random() * ALPHA_NUMERIC_STRING.length());
-            builder.append(ALPHA_NUMERIC_STRING.charAt(character));
-        }
-        return builder.toString();
-    }
-
-
 }

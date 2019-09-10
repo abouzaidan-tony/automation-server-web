@@ -1,10 +1,10 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
-
+<%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
 <!DOCTYPE html>
 <html lang="en">
 
 <head>
-    <title>Login</title>
+    <title>Sign Up</title>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <!--===============================================================================================-->
@@ -33,68 +33,79 @@
 <body>
 
     <div class="limiter">
-        <div class="container-login100" style="background-image: url('https://colorlib.com/etc/lf/Login_v12/images/img-01.jpg');">
+        <div class="container-login100"
+            style="background-image: url('https://colorlib.com/etc/lf/Login_v12/images/img-01.jpg');">
             <div class="wrap-login100">
                 <div class="login100-pic js-tilt" data-tilt>
                     <img src="<c:url value="/resources/images/img-01.png" />" alt="IMG">
                 </div>
 
-                <form class="login100-form validate-form" name='loginForm' action="<c:url value='login' />"
-                    method='POST' enctype="application/x-www-form-urlencoded">
-
+                <form:form method="POST" action="/dev/signup" modelAttribute="devForm" class="login100-form validate-form" >
                     <span class="login100-form-title">
-                        ${title}
+                        Sign Up as Developer
                     </span>
 
                     <div class="wrap-input100 validate-input" data-validate="Valid email is required: ex@abc.xyz">
-                        <input class="input100" type="email" name="username" placeholder="Email">
+                        <form:input path="userEmail" class="input100" type="email" name="userEmail"
+                            placeholder="Email" />
                         <span class="focus-input100"></span>
                         <span class="symbol-input100">
                             <i class="fa fa-envelope" aria-hidden="true"></i>
                         </span>
                     </div>
 
-                    <div class="wrap-input100 validate-input" data-validate="Minimum length is 8">
-                        <input class="input100" type="password" name="password" placeholder="Password">
+                    <div class="wrap-input100 validate-input" data-validate="Valid email is required: ex@abc.xyz">
+                        <form:input path="userInvoice" class="input100" type="email" name="userInvoice" placeholder="Unity Invoice number" />
+                        <span class="focus-input100"></span>
+                        <span class="symbol-input100">
+                            <i class="fa fa-file-invoice" aria-hidden="true"></i>
+                        </span>
+                    </div>
+
+                    <div class="wrap-input100 validate-input" data-validate="Password is required">
+                        <form:input path="userPassword" class="input100" type="password" name="userPassword"
+                            id="passwordInput" placeholder="Password" />
                         <span class="focus-input100"></span>
                         <span class="symbol-input100">
                             <i class="fa fa-lock" aria-hidden="true"></i>
                         </span>
                     </div>
 
-                    <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" />
+                    <div class="wrap-input100 validate-input" data-validate="Password does not match">
+                        <form:input path="userPassword2" class="input100" type="password" name="userPassword2"
+                            data-for="passwordInput" placeholder="Repeat Password" />
+                        <span class="focus-input100"></span>
+                        <span class="symbol-input100">
+                            <i class="fa fa-lock" aria-hidden="true"></i>
+                        </span>
+                    </div>
+
+                    <ul>
+                        <c:if test="${not empty error}">
+                            <li style="color:red">${error}</li>
+                        </c:if>
+                        <c:if test="${not empty errors}">
+                            <c:forEach items="${errors}" var="er">
+                                <li style="color:red">${er.value}</li>
+                            </c:forEach>
+                        </c:if>
+                    </ul>
 
                     <div class="container-login100-form-btn">
                         <button class="login100-form-btn">
-                            Login
+                            Sign Up
                         </button>
                     </div>
 
-                    <span class='red'>${errorMessge}</span>
-
-                    <!-- <div class="text-center p-t-12">
-                        <span class="txt1">
-                            Forgot
-                        </span>
-                        <a class="txt2" href="#">
-                            Username / Password?
-                        </a>
-                    </div> -->
-
-                    <div class="text-center p-t-12">
-                        <a class="txt2" href="<c:url value="${signInUrl}" /> ">
-                        ${signInTxt}
-                        <i class="fa fa-long-arrow-right m-l-5" aria-hidden="true"></i>
-                        </a>
-                    </div>
-
                     <div class="text-center p-t-136">
-                        <a class="txt2" href="<c:url value="${signUpUrl}" /> ">
-                        Create your Account
+                        <a class="txt2" href="<c:url value="/dev/login" /> ">
+                            Already have an Account? Login!
                         <i class="fa fa-long-arrow-right m-l-5" aria-hidden="true"></i>
                         </a>
                     </div>
-                </form>
+                </form:form>
+                
+
             </div>
         </div>
     </div>
@@ -116,8 +127,7 @@
         })
     </script>
     <!--===============================================================================================-->
-    <script src="<c:url value="/resources/js/main.js" />" >
-    </script>
+    <script src="<c:url value="/resources/js/main.js" />" ></script>
 
 </body>
 

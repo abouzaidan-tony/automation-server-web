@@ -12,6 +12,7 @@ import java.util.List;
 import com.tony.automationserverweb.model.Account;
 import com.tony.automationserverweb.model.Device;
 import com.tony.automationserverweb.model.User;
+import com.tony.automationserverweb.helper.Helper;
 import com.tony.automationserverweb.mapper.AccountRowMapper;
 import com.tony.automationserverweb.mapper.DeviceRowMapper;
 import com.tony.automationserverweb.mapper.UserRowMapper;
@@ -119,22 +120,11 @@ public class AccountRepositoryImpl implements IRepository<Account, Long> {
         this.userRowMapper = userRowMapper;
     }
 
-    private static final String ALPHA_NUMERIC_STRING = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
-    private String generateToken(){
-        StringBuilder builder = new StringBuilder();
-        int count = 30;
-        while (count-- != 0) {
-            int character = (int) (Math.random() * ALPHA_NUMERIC_STRING.length());
-            builder.append(ALPHA_NUMERIC_STRING.charAt(character));
-        }
-        return builder.toString();
-    }
-
     public String generateUniqueToken(){
         int count = 0;
         String token = null;
         do{
-            token = generateToken();
+            token = Helper.generateToken();
             count = jdbcTemplate.queryForObject(uniqueTokenQuery, new Object[]{token}, Integer.class);
         }while(count != 0);
         return token;

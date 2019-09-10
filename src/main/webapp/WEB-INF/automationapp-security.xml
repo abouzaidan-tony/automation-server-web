@@ -9,10 +9,14 @@
         <intercept-url pattern="/" access="permitAll()" />
         <intercept-url pattern="/signup" access="permitAll()" />
         <intercept-url pattern="/account/**" access="hasRole('ROLE_USER')" />
+        <intercept-url pattern="/dev/account/**" access="hasRole('ROLE_DEV')" />
         <form-login login-page="/login" authentication-success-handler-ref="authenticationSuccessHandler"
             username-parameter="username" password-parameter="password"
             authentication-failure-url="/login?error=true"/>
         <logout logout-success-url="/logout" />
+        <form-login login-page="/dev/login" authentication-success-handler-ref="authenticationSuccessHandler" 
+            username-parameter="username" password-parameter="password" 
+            authentication-failure-url="/dev/login?error=true" />
         <csrf/>
     </http>
 

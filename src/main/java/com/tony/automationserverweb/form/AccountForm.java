@@ -64,6 +64,8 @@ public class AccountForm implements Form<Account> {
             errors.put("userPassword", "Password is required");
         else if (userPassword.length() < 8)
             errors.put("userPassword", "Minimum password length is 8");
+        else if (!userPassword.equals(userPassword2))
+            errors.put("userPassword", "Passwords does not match");
 
         if (userNickname == null)
             errors.put("userNickname", "Nickname is required");

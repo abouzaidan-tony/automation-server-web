@@ -81,7 +81,7 @@ public class SignUpController {
         try {
             devAccountService.createAccount(account);
             request.getSession().setAttribute("account", account);
-            return "redirect:/signup/verify";
+            return "redirect:/dev/signup/verify";
 
         } catch (ApplicationException ex) {
             model.addAttribute("error", ex.getMessage());
@@ -91,7 +91,7 @@ public class SignUpController {
     }
     
 
-    @GetMapping({ "/verify", "/dev/verify" })
+    @GetMapping({ "/signup/verify", "/dev/signup/verify" })
     public ModelAndView verifyAccountPage(@ModelAttribute("verifyForm") VerificationForm verificationForm, Model model) {
         Object account = request.getSession().getAttribute("account");
 
@@ -108,10 +108,10 @@ public class SignUpController {
         return new ModelAndView("verifyAccount", "verifyForm", new VerificationForm());
     }
 
-    @PostMapping({"/verify", "/dev/verify"})
+    @PostMapping({"/signup/verify", "/dev/signup/verify"})
     public String verifyAccountRequest(@ModelAttribute("verifyForm") VerificationForm verificationForm, Model model){
 
-        Account account = (Account) request.getSession().getAttribute("account");
+        Object account = request.getSession().getAttribute("account");
 
 
         String url = null;
@@ -129,11 +129,21 @@ public class SignUpController {
             return "verifyAccount";
         }
 
-        if(accountService.verifyAccount(account, verificationForm.fill()))
-        {
-            request.getSession().removeAttribute("account");
-            return url;
+        if(account instanceof Account) {
+            if(accountService.verifyAccount((Account)account, verificationForm.fill()))
+            {
+                request.getSession().removeAttribute("account");
+                return url;
+            }
+        }else if(account instanceof DevAccount){
+            if(devAccountService.verifyAccount((DevAccount)account, verificationForm.fill()))
+            {
+                request.getSession().removeAttribute("account");
+                return url;
+            }
         }
+
+       
         model.addAttribute("error", "Wrong Code");
         return "verifyAccount";
     }

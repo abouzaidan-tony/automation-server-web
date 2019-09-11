@@ -1,5 +1,6 @@
 package com.tony.automationserverweb.form;
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -8,7 +9,11 @@ import com.tony.automationserverweb.model.DevAccount;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.RestTemplate;
 
@@ -18,7 +23,7 @@ public class DevAccountForm implements Form<DevAccount> {
     private String userEmail;
     private String userPassword;
     private String userPassword2;
-    private String unityInvoice;
+    private String userInvoice;
 
     private boolean validated;
     private HashMap<String, String> errors;
@@ -28,12 +33,12 @@ public class DevAccountForm implements Form<DevAccount> {
         errors = new HashMap<>();
     }
 
-    public String getUnityInvoice() {
-        return unityInvoice;
+    public String getUserInvoice() {
+        return userInvoice;
     }
 
-    public void setUnityInvoice(String unityInvoice) {
-        this.unityInvoice = unityInvoice;
+    public void setUserInvoice(String userInvoice) {
+        this.userInvoice = userInvoice;
     }
 
     @Override
@@ -67,15 +72,29 @@ public class DevAccountForm implements Form<DevAccount> {
         else if (!userPassword.equals(userPassword2))
             errors.put("userPassword", "Passwords does not match");
 
-        if (unityInvoice == null)
-            unityInvoice = "";
+        if (userInvoice == null)
+            userInvoice = "";
 
         RestTemplate restTemplate = new RestTemplate();
-        String fooResourceUrl = "https://api.assetstore.unity3d.com/publisher/v1/invoice/verify.json?key=?AOYGTWPa1ICM7Xvl6VEV0K0cYOg&invoice="+unityInvoice;
-        ResponseEntity<String> response = restTemplate.getForEntity(fooResourceUrl, String.class);
+        HttpHeaders headers = new HttpHeaders();
+        headers.setAccept(Arrays.asList(MediaType.APPLICATION_JSON));
+        headers.add("user-agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/54.0.2840.99 Safari/537.36");
+        HttpEntity<String> entity = new HttpEntity<String>("parameters", headers);
+        headers.add("user-agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/54.0.2840.99 Safari/537.36");
+        String fooResourceUrl = "https://api.assetstore.unity3d.com/publisher/v1/invoice/verify.json?key=AOYGTWPa1ICM7Xvl6VEV0K0cYOg&invoice="+userInvoice;
+        ResponseEntity<String> response = null;
+        try{
+            response = restTemplate.exchange(fooResourceUrl, HttpMethod.GET, entity, String.class);
+        }catch(Exception ex){
+            ex.printStackTrace();
+        }
+        
         
         boolean isWrong = true;
         do{
+            if(response == null)
+                break;
+
             if(!response.getStatusCode().equals(HttpStatus.OK))
                 break;
 
@@ -100,7 +119,7 @@ public class DevAccountForm implements Form<DevAccount> {
         DevAccount account = new DevAccount();
         account.setEmail(userEmail);
         account.setPasswordHash(userPassword);
-        account.setUnityInvoice(unityInvoice);
+        account.setUnityInvoice(userInvoice);
         return account;
     }
 

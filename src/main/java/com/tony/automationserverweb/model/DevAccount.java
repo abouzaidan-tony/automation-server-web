@@ -17,10 +17,28 @@ public class DevAccount {
 
     private String unityInvoice;
 
-    private List<Application> applicatons;
+    private List<Application> applications;
+
+    private boolean verified;
 
     public DevAccount() {
-        applicatons = new ArrayList<>();
+        setApplications(new ArrayList<>());
+    }
+
+    public List<Application> getApplications() {
+        return applications;
+    }
+
+    public void setApplications(List<Application> applications) {
+        this.applications = applications;
+    }
+
+    public boolean isVerified() {
+        return verified;
+    }
+
+    public void setVerified(boolean verified) {
+        this.verified = verified;
     }
 
     public String getUnityInvoice() {
@@ -63,20 +81,12 @@ public class DevAccount {
         this.otp = otp;
     }
 
-    public List<Application> getApplicatons() {
-        return applicatons;
-    }
-
-    public void setApplicatons(List<Application> applicatons) {
-        this.applicatons = applicatons;
-    }
-
     @Override
     public boolean equals(Object obj) {
         if (obj == null)
             return false;
         if (obj instanceof DevAccount)
-            return ((User) obj).getId() == this.getId();
+            return ((DevAccount) obj).getId() == this.getId();
         if (obj instanceof Long)
             return ((Long) obj).equals(this.getId());
         return false;

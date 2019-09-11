@@ -40,7 +40,7 @@
                     <img src="<c:url value="/resources/images/img-01.png" />" alt="IMG">
                 </div>
 
-                <form:form method="POST" action="/signup/verify" modelAttribute="verifyForm" class="login100-form validate-form" >
+                <form:form method="POST" modelAttribute="verifyForm" class="login100-form validate-form" >
                     <span class="login100-form-title">
                         Verify Account
                     </span>

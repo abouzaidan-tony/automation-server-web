@@ -5,18 +5,17 @@ import java.util.Map;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.tony.automationserverweb.model.Application;
-import com.tony.automationserverweb.model.User;
 
 @JsonIgnoreProperties({ "validated", "errors" })
-public class UserForm implements Form<User> {
+public class ApplicationForm implements Form<Application> {
 
-    public String deviceKey;
-    public Long applicationId;
+    public String appToken;
+    public String appName;
 
     private boolean validated;
     private HashMap<String, String> errors;
 
-    public UserForm() {
+    public ApplicationForm() {
         validated = false;
         errors = new HashMap<>();
     }
@@ -39,23 +38,15 @@ public class UserForm implements Form<User> {
             return;
         validated = true;
 
-        if (deviceKey != null && deviceKey.length() != 5)
-            errors.put("deviceKey", "Device Key must be 5 characters");
+        if(appName == null && appToken == null)
+            errors.put("error", "Missing Fields");
+
     }
 
-    public User fill(){
-        User d = new User();
-        d.setApplication(new Application());
-        d.getApplication().setId(applicationId);
-        d.setKey(deviceKey);
+    public Application fill(){
+        Application d = new Application();
+        d.setName(appName);
+        d.setToken(appToken);
         return d;
-    }
-
-    public Long getApplicationId() {
-        return applicationId;
-    }
-
-    public void setApplicationId(Long applicationId) {
-        this.applicationId = applicationId;
     }
 }

@@ -90,8 +90,10 @@ function resetCount(context) {
 jQuery("#btnAddDeviceKey").click(function () {
     var table = jQuery("#devices-table")
     var _deviceKey = jQuery("#deviceKeyInput").val()
+    var _appId = jQuery("#newDeviceApp").val()
     var data = {
-        deviceKey: _deviceKey
+        deviceKey: _deviceKey,
+        applicationId : _appId
     }
     var token = jQuery("meta[name='_csrf']").attr("content");
     var count = jQuery('#devices-table tbody tr').length + 1
@@ -108,7 +110,9 @@ jQuery("#btnAddDeviceKey").click(function () {
                 alert(getErrorMsg(data['data']));
                 return;
             }
-            table.append("<tr><td class=\"deviceCount\"> " + count + "</td><td class=\"deviceKey\"> " + _deviceKey + "</td><td><span class=\"dot red\"></span></td> <td> <button class=\"btn btn-danger removeDevice\">Remove Device</button></td></tr>");
+            var dev = data['data'];
+            jQuery("#deviceKeyInput").val('')
+            table.append("<tr><td class=\"deviceCount\"> " + count + "</td><td class=\"deviceKey\"> " + dev['key'] + "</td><td>"+dev['application']['name']+"</td><td><span class=\"dot red\"></span></td> <td> <button class=\"btn btn-danger removeDevice\">Remove Device</button></td></tr>");
         }
     })
 })
@@ -117,8 +121,10 @@ jQuery("#btnAddDeviceKey").click(function () {
 jQuery("#btnAddUserKey").click(function () {
     var table = jQuery("#users-table")
     var _deviceKey = jQuery("#userKeyInput").val()
+    var _appId = jQuery("#newUserApp").val()
     var data = {
-        deviceKey: _deviceKey
+        deviceKey: _deviceKey,
+        applicationId: _appId
     }
     var token = jQuery("meta[name='_csrf']").attr("content");
     var count = jQuery('#users-table tbody tr').length + 1
@@ -135,7 +141,9 @@ jQuery("#btnAddUserKey").click(function () {
                 alert(getErrorMsg(data['data']));
                 return;
             }
-            table.append("<tr><td class=\"deviceCount\"> " + count + "</td><td class=\"deviceKey\"> " + _deviceKey + "</td><td><span class=\"dot red\"></span></td> <td> <button class=\"btn btn-danger removeUser\">Remove Use</button></td></tr>");
+            jQuery("#userKeyInput").val('')
+            var dev = data['data'];
+            table.append("<tr><td class=\"deviceCount\"> " + count + "</td><td class=\"deviceKey\"> " + dev['key'] + "</td><td>"+dev['application']['name']+"</td><td><span class=\"dot red\"></span></td> <td> <button class=\"btn btn-danger removeUser\">Remove Use</button></td></tr>");
         }
     })
 })
@@ -147,3 +155,69 @@ function getErrorMsg(data){
     }
     return str;
 }
+
+
+jQuery('body').on('click', '.removeApp', function () {
+    var table = jQuery("#apps-table")
+    var row = jQuery(this).parent().parent()
+    var obj = row.find('.appToken')
+    var app_id = obj.attr("data-id")
+    var _deviceKey = obj.html().trim()
+    var data = {
+        appToken: _deviceKey
+    }
+    var token = jQuery("meta[name='_csrf']").attr("content");
+    jQuery.ajax({
+        url: 'account/app/unsubscribe',
+        type: 'POST',
+        dataType: 'json',
+        contentType: 'application/json; charset=utf-8',
+        headers: { "X-CSRF-TOKEN": token },
+        data: JSON.stringify(data),
+        success: function (data) {
+            var success = data['success'];
+            if (success != true) {
+                alert(getErrorMsg(data['data']));
+                return;
+            }
+            jQuery('.appSelect option[value="'+app_id+'"').each(function(){
+                jQuery(this).remove()
+            })
+            row.remove()
+            resetCount(table)
+        }
+    })
+})
+
+
+jQuery("#btnAppSubscribe").click(function () {
+    var table = jQuery("#apps-table")
+    var _deviceKey = jQuery("#appTokenInput").val()
+    var data = {
+        appToken: _deviceKey
+    }
+    var token = jQuery("meta[name='_csrf']").attr("content");
+    var count = jQuery('#apps-table tbody tr').length + 1
+    jQuery.ajax({
+        url: 'account/app/subscribe',
+        type: 'POST',
+        dataType: 'json',
+        contentType: 'application/json; charset=utf-8',
+        headers: { "X-CSRF-TOKEN": token },
+        data: JSON.stringify(data),
+        success: function (data) {
+            var success = data['success'];
+            if (success != true) {
+                alert(getErrorMsg(data['data']));
+                return;
+            }
+            var app = data['data'];
+            jQuery("#appTokenInput").val('')
+            table.append("<tr><td class=\"appCount\"> " + count + "</td><td class=\"appToken\" data-id=\""+app['id']+"\"> " + app['name'] + "</td><td>"+app['token']+"</td> <td> <button class=\"btn btn-danger removeApp\">Unsubscribe</button></td></tr>");
+            jQuery(".appSelect").each(function(){
+                var option = "<option value=\""+app['id']+"\">"+app['name']+"</option>";
+                jQuery(this).append(option)
+            })
+        }
+    })
+})

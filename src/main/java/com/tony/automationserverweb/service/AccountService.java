@@ -1,14 +1,18 @@
 package com.tony.automationserverweb.service;
 
 import com.tony.automationserverweb.dao.AccountRepositoryImpl;
+import com.tony.automationserverweb.dao.ApplicationRepositoryImpl;
 import com.tony.automationserverweb.dao.DeviceRepositoryImpl;
 import com.tony.automationserverweb.dao.UserRepositoryImpl;
 import com.tony.automationserverweb.exception.DuplicateDeviceKeyException;
 import com.tony.automationserverweb.exception.EmailAlreadyExistsException;
+import com.tony.automationserverweb.exception.InvalidApplicationException;
 import com.tony.automationserverweb.exception.MaximumDevicesReachedException;
+import com.tony.automationserverweb.exception.MaximumSubscriptionException;
 import com.tony.automationserverweb.exception.ResourceNotFoundException;
 import com.tony.automationserverweb.helper.Helper;
 import com.tony.automationserverweb.model.Account;
+import com.tony.automationserverweb.model.Application;
 import com.tony.automationserverweb.model.Device;
 import com.tony.automationserverweb.model.User;
 
@@ -28,15 +32,18 @@ public class AccountService {
     private UserRepositoryImpl userRepositoryImpl;
 
     @Autowired
+    private ApplicationRepositoryImpl applicationRepositoryImpl;
+
+    @Autowired
     private MailService mailService;
 
     public Account createAccount(Account account){
         account.setPasswordHash(Helper.Encode(account.getPasswordHash()));
         account.setToken(accountRepositoryImpl.generateUniqueToken());
         Integer count = accountRepositoryImpl.getCountUsersByEmail(account.getEmail());
-        sendAccountVerification(account, false);
         if(count != 0)
             throw new EmailAlreadyExistsException();
+        sendAccountVerification(account, false);
         account = accountRepositoryImpl.insert(account);
 
         return account;
@@ -64,21 +71,26 @@ public class AccountService {
         return true;
     }
 
-    public void addUser(Account account, User device) {
+    public User addUser(Account account, User user) {
         if (account.getUsers().size() > 3)
             throw new MaximumDevicesReachedException();
         boolean duplicate = false;
         for (User var : account.getUsers()) {
-            if (var.getKey().equals(device.getKey())) {
+            if (var.getKey().equals(user.getKey())) {
                 duplicate = true;
                 break;
             }
         }
         if (duplicate)
-            throw new DuplicateDeviceKeyException(device.getKey());
-        device.setAccount(account);
-        account.getUsers().add(device);
-        userRepositoryImpl.insert(device);
+            throw new DuplicateDeviceKeyException(user.getKey());
+        Application app = Helper.getAppFromList(account.getSubscriptions(), user.getAppId());
+        if(app == null)
+            throw new InvalidApplicationException();
+        user.setApplication(app);
+        user.setAccount(account);
+        account.getUsers().add(user);
+        userRepositoryImpl.insert(user);
+        return user;
     }
 
     public void removeUser(Account account, User device) {
@@ -97,7 +109,7 @@ public class AccountService {
         userRepositoryImpl.delete(device);
     }
 
-    public void addDevice(Account account, Device device) {
+    public Device addDevice(Account account, Device device) {
         if(account.getDevices().size() > 3)
             throw new MaximumDevicesReachedException();
         boolean duplicate = false;
@@ -110,9 +122,14 @@ public class AccountService {
         }
         if(duplicate)
             throw new DuplicateDeviceKeyException(device.getKey());
+        Application app = Helper.getAppFromList(account.getSubscriptions(), device.getAppId());
+        if(app == null)
+            throw new InvalidApplicationException();
+        device.setApplication(app);
         device.setAccount(account);
         account.getDevices().add(device);
         deviceRepositoryImpl.insert(device);
+        return device;
     }
 
     public void removeDevice(Account account, Device device) {
@@ -131,10 +148,31 @@ public class AccountService {
         deviceRepositoryImpl.delete(device);
     }
 
-    /**
-     * @return the userRepositoryImpl
-     */
     public AccountRepositoryImpl getAccountRepositoryImpl() {
         return accountRepositoryImpl;
+    }
+
+    public Application subscribe(Account account, Application application){
+        if(account.getSubscriptions().size() >=4)
+            throw new MaximumSubscriptionException();
+        application = applicationRepositoryImpl.findOneByToken(application.getToken());
+        if(application == null)
+            return null;
+        if(account.getSubscriptions().contains(application))
+            return null;
+        account.getSubscriptions().add(application);
+        accountRepositoryImpl.subscribe(account, application);
+        return application;
+    }
+
+    public Application unsubscribe(Account account, Application application){
+        application = applicationRepositoryImpl.findOneByToken(application.getToken());
+        if(application == null)
+            return null;
+         if(!account.getSubscriptions().contains(application))
+            return null;
+        account.getSubscriptions().remove(application);
+        accountRepositoryImpl.unsubscribe(account, application);
+        return application;
     }
 }

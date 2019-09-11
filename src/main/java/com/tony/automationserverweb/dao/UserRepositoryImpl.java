@@ -23,9 +23,9 @@ public class UserRepositoryImpl implements IRepository<User, Long> {
     private UserRowMapper userRowMapper;
 
     private static final String deleteQuery = "DELETE FROM user WHERE id = ?";
-    private static final String insertQuery = "INSERT INTO user (user_key, account_id, connected) VALUES (?, ?, 0)";
-    private static final String updateQuery = "UPDATE user SET user_key = ?, account_id = ? WHERE id = ?";
-    private static final String selectQuery = "SELECT id user_id, user_key, connected u_connected, account_id FROM user";
+    private static final String insertQuery = "INSERT INTO user (user_key, account_id, connected, app_id) VALUES (?, ?, 0, ?)";
+    private static final String updateQuery = "UPDATE user SET user_key = ?, account_id = ?, app_id = ? WHERE id = ?";
+    private static final String selectQuery = "SELECT id user_id, user_key, connected u_connected, account_id, app_id FROM user";
 
     @Override
     public User insert(User object) {
@@ -35,6 +35,7 @@ public class UserRepositoryImpl implements IRepository<User, Long> {
             PreparedStatement ps = con.prepareStatement(insertQuery, Statement.RETURN_GENERATED_KEYS);
             ps.setString(1, object.getKey());
             ps.setLong(2, object.getAccountId());
+            ps.setLong(3, object.getAppId());
             return ps;
         }, keyHolder);
         object.setId(keyHolder.getKey().longValue());
@@ -47,6 +48,8 @@ public class UserRepositoryImpl implements IRepository<User, Long> {
             PreparedStatement ps = con.prepareStatement(updateQuery);
             ps.setString(1, object.getKey());
             ps.setLong(2, object.getAccountId());
+            ps.setLong(3, object.getAppId());
+            ps.setLong(4, object.getId());
             return ps;
         });
         return object;

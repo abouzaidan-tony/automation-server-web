@@ -39,9 +39,9 @@ public class DevAccountRepositoryImpl implements IRepository<DevAccount, Long> {
     private ApplicationRowMapper applicationRowMapper;
 
     private static final String countQuery = "SELECT count(*) FROM dev_account WHERE email = ?";
-    private static final String insertQuery = "INSERT INTO dev_account (email, password, otp) VALUES (?, ?, ?, ?, ?)";
-    private static final String updateQuery = "UPDATE dev_account SET email = ?, password = ?, otp = ? WHERE id = ?";
-    private static final String selectQuery = "SELECT dev_account.id account_id, email, password, otp, application.id app_id, app_name, app_token FROM dev_account LEFT JOIN application ON application.account_id = dev_account.id ";
+    private static final String insertQuery = "INSERT INTO dev_account (email, password, otp, verified, unity_invoice) VALUES (?, ?, ?, ?, ?)";
+    private static final String updateQuery = "UPDATE dev_account SET email = ?, password = ?, otp = ?, verified = ?, unity_invoice = ? WHERE id = ?";
+    private static final String selectQuery = "SELECT dev_account.id account_id, email, password, otp, verified, unity_invoice, application.id app_id, app_name, app_token, dev_account_id FROM dev_account LEFT JOIN application ON application.dev_account_id = dev_account.id ";
 
     @Override
     @Transactional
@@ -53,12 +53,14 @@ public class DevAccountRepositoryImpl implements IRepository<DevAccount, Long> {
             ps.setString(1, object.getEmail());
             ps.setString(2, object.getPasswordHash());
             ps.setString(3, object.getOtp());
+            ps.setBoolean(4, object.isVerified());
+            ps.setString(5, object.getUnityInvoice());
             return ps;
         }, keyHolder);
 
         object.setId(keyHolder.getKey().longValue());
 
-        for (Application d : object.getApplicatons()) {
+        for (Application d : object.getApplications()) {
             d.setAccount(object);
             applicationRepositoryImpl.insert(d);
         }
@@ -73,7 +75,9 @@ public class DevAccountRepositoryImpl implements IRepository<DevAccount, Long> {
             ps.setString(1, object.getEmail());
             ps.setString(2, object.getPasswordHash());
             ps.setString(3, object.getOtp());
-            ps.setLong(4, object.getId());
+            ps.setBoolean(4, object.isVerified());
+            ps.setString(5, object.getUnityInvoice());
+            ps.setLong(6, object.getId());
             return ps;
         });
         return object;
@@ -130,12 +134,12 @@ public class DevAccountRepositoryImpl implements IRepository<DevAccount, Long> {
                     users.add(account);
                 }
 
-                Long a = rs.getLong("device_id");
+                Long a = rs.getLong("app_id");
                 if (!rs.wasNull() && deviceId != a)
                 {
                     deviceId = a;
                     Application d = applicationRowMapper.mapRow(rs, deviceIdx++);
-                    account.getApplicatons().add(d);
+                    account.getApplications().add(d);
                 }
             }
             return users;

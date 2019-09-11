@@ -28,14 +28,10 @@
         <div class="bg-light border-right" id="sidebar-wrapper">
             <div class="sidebar-heading"> User Page </div>
             <div class="list-group list-group-flush">
-                <a href="#" class="list-group-item list-group-item-action bg-light" data-for-page="page1">Info</a>
-                <a href="#" class="list-group-item list-group-item-action bg-light"
-                    data-for-page="page2">Subscriptions</a>
-                <a href="#" class="list-group-item list-group-item-action bg-light" data-for-page="page3">Devices</a>
-                <a href="#" class="list-group-item list-group-item-action bg-light" data-for-page="page4">Users</a>
-                <a href="#" class="list-group-item list-group-item-action bg-light" data-for-page="page5">Statistics</a>
-                <a href="#" class="list-group-item list-group-item-action bg-light" data-for-page="page6">Help</a>
-                <!-- <a href="#" class="list-group-item list-group-item-action bg-light" data-for-page="page6">Developers</a> -->
+                <a href="#" class="list-group-item list-group-item-action bg-light" data-for-page="page1">Applications</a>
+                <a href="#" class="list-group-item list-group-item-action bg-light" data-for-page="page4">Statistics</a>
+                <a href="#" class="list-group-item list-group-item-action bg-light" data-for-page="page5">Help</a>
+                <a href="#" class="list-group-item list-group-item-action bg-light" data-for-page="page6">Developers</a>
                 <!-- <a href="#" class="list-group-item list-group-item-action bg-light">Overview</a>
                 <a href="#" class="list-group-item list-group-item-action bg-light">Events</a>
                 <a href="#" class="list-group-item list-group-item-action bg-light">Profile</a>
@@ -59,82 +55,41 @@
                 <div class="collapse navbar-collapse" id="navbarSupportedContent">
                     <ul class="navbar-nav ml-auto mt-2 mt-lg-0">
                         <li class="nav-item active">
-                            <a class="nav-link" href="#"> ${user.nickname} <span class="sr-only">(current)</span></a>
+                            <a class="nav-link" href="#"> ${user.email} <span class="sr-only">(current)</span></a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link" href="<c:url value="/logout" />">Logout</a>
                         </li>
-                        <!-- <li class="nav-item dropdown">
-                            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
-                                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                Dropdown
-                            </a>
-                            <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
-                                <a class="dropdown-item" href="#">Action</a>
-                                <a class="dropdown-item" href="#">Another action</a>
-                                <div class="dropdown-divider"></div>
-                                <a class="dropdown-item" href="#">Something else here</a>
-                            </div>
-                        </li> -->
                     </ul>
                 </div>
             </nav>
 
             <div class="container-fluid page" id="page1">
-                <table class="table">
-                    <tr>
-                        <td>
-                            Nickname :
-                        </td>
-                        <td>
-                            ${account.nickname}
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            Email :
-                        </td>
-                        <td>
-                            ${account.email}
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            TOKEN :
-                        </td>
-                        <td>
-                            ${account.token}
-                        </td>
-                    </tr>
-                </table>
-            </div>
-
-            <div class="container-fluid page" id="page2">
                 <table class="table" id="apps-table">
                     <thead>
                         <tr>
-                            <th>Applicatio Number</th>
-                            <th>Application Name</th>
+                            <th>Application Number</th>
                             <th>Application Token</th>
+                            <th>Application Name</th>
                             <th></th>
                         </tr>
                     </thead>
                     <tbody>
                         <c:set var="count" value="0" scope="page" />
-                        <c:forEach items="${account.subscriptions}" var="app">
+                        <c:forEach items="${account.applications}" var="app">
                             <tr>
-                                <td class="deviceCount">
+                                <td class="appCount">
                                     <c:set var="count" value="${count + 1}" scope="page" />
                                     ${count}
+                                </td>
+                                <td class="appToken">
+                                    ${app.token}
                                 </td>
                                 <td>
                                     ${app.name}
                                 </td>
-                                <td class="appToken" data-id="${app.id}">
-                                    ${app.token}
-                                </td>
                                 <td>
-                                    <button class="btn btn-danger removeApp">Unsubscribe</button>
+                                    <button class="btn btn-danger removeApp">Remove App</button>
                                 </td>
                             </tr>
                         </c:forEach>
@@ -144,156 +99,16 @@
                 <table class="table">
                     <tr>
                         <td>
-                            Subscribe :
+                            New Application :
                         </td>
                         <td>
                             <div class="form-group">
-                                <input type="text" class="form-control" id="appTokenInput"
-                                    placeholder="Enter new app token">
+                                <input type="text" class="form-control" id="appNameInput"
+                                    placeholder="Enter new application name">
                             </div>
                         </td>
                         <td>
-                            <button class="btn btn-primary btn-successs" id="btnAppSubscribe">Subscribe</button>
-                        </td>
-                    </tr>
-                </table>
-            </div>
-
-            <div class="container-fluid page" id="page3">
-                <table class="table" id="devices-table">
-                    <thead>
-                        <tr>
-                            <th>Device Number</th>
-                            <th>Device Key</th>
-                            <th>Application</th>
-                            <th>Online</th>
-                            <th></th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <c:set var="count" value="0" scope="page" />
-                        <c:forEach items="${account.devices}" var="device">
-                            <tr>
-                                <td class="deviceCount">
-                                    <c:set var="count" value="${count + 1}" scope="page" />
-                                    ${count}
-                                </td>
-                                <td class="deviceKey">
-                                    ${device.key}
-                                </td>
-                                <td>
-                                    ${device.appName}
-                                </td>
-                                <td>
-                                    <c:if test="${device.connected == true}">
-                                        <span class="dot green"></span>
-                                    </c:if>
-
-                                    <c:if test="${device.connected == false}">
-                                        <span class="dot red"></span>
-                                    </c:if>
-
-                                </td>
-                                <td>
-                                    <button class="btn btn-danger removeDevice">Remove Device</button>
-                                </td>
-                            </tr>
-                        </c:forEach>
-
-                    </tbody>
-                </table>
-                <table class="table">
-                    <tr>
-                        <td>
-                            New Device :
-                        </td>
-                        <td>
-                            <div class="form-group">
-                                <input type="text" class="form-control" id="deviceKeyInput"
-                                    placeholder="Enter new device key">
-                            </div>
-                        </td>
-                        <td>
-                            <div class="form-group">
-                                <select class="form-control appSelect" id="newDeviceApp">
-                                    <c:forEach items="${account.subscriptions}" var="app">
-                                        <option value="${app.id}">${app.name}</option>
-                                    </c:forEach>
-                                </select>
-                            </div>
-                        </td>
-                        <td>
-                            <button class="btn btn-primary btn-successs" id="btnAddDeviceKey">Add</button>
-                        </td>
-                    </tr>
-                </table>
-            </div>
-
-            <div class="container-fluid page" id="page4">
-                <table class="table" id="users-table">
-                    <thead>
-                        <tr>
-                            <th>User Number</th>
-                            <th>User Key</th>
-                            <th>Application</th>
-                            <th>Online</th>
-                            <th></th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <c:set var="count" value="0" scope="page" />
-                        <c:forEach items="${account.users}" var="device">
-                            <tr>
-                                <td class="deviceCount">
-                                    <c:set var="count" value="${count + 1}" scope="page" />
-                                    ${count}
-                                </td>
-                                <td class="deviceKey">
-                                    ${device.key}
-                                </td>
-                                <td class="deviceKey">
-                                    ${device.appName}
-                                </td>
-                                <td>
-                                    <c:if test="${device.connected == true}">
-                                        <span class="dot green"></span>
-                                    </c:if>
-
-                                    <c:if test="${device.connected == false}">
-                                        <span class="dot red"></span>
-                                    </c:if>
-
-                                </td>
-                                <td>
-                                    <button class="btn btn-danger removeUser">Remove User</button>
-                                </td>
-                            </tr>
-                        </c:forEach>
-
-                    </tbody>
-                </table>
-                <table class="table">
-                    <tr>
-                        <td>
-                            New User :
-                        </td>
-                        <td>
-                            <div class="form-group">
-                                <input type="text" class="form-control" id="userKeyInput"
-                                    placeholder="Enter new user key">
-                            </div>
-                        </td>
-                        <td>
-                            <div class="form-group">
-                                <select class="form-control appSelect" id="newUserApp">
-                                    <c:forEach items="${account.subscriptions}" var="app">
-                                        <option value="${app.id}">${app.name}</option>
-                                    </c:forEach>
-                                </select>
-                            </div>
-                        </td>
-                        <td>
-                            <button class="btn btn-primary btn-successs" id="btnAddUserKey">Add</button>
+                            <button class="btn btn-primary btn-successs" id="btnAddAppName">Add</button>
                         </td>
                     </tr>
                 </table>
@@ -352,8 +167,7 @@
                 <p>
                     <ul>
                         <li>
-                            You should allow users to sign up for an account on this website so you clients devices dont
-                            conflic.
+                            You should allow users to sign up for an account on this website so you clients devices dont conflic.
                         </li>
                         <li>
                             Unity Help:
@@ -371,8 +185,7 @@
                                         session.onMessageReady += Receive;<br>
                                         session.OnConnectionFailed += Failed;<br>
                                     </code>
-                                    Where <code>Connected</code>, <code>Receive</code> and <code>Failed</code> are
-                                    function to be defined
+                                    Where <code>Connected</code>, <code>Receive</code> and <code>Failed</code> are function to be defined
                                 </li>
                                 <li>
                                     For sending Messages, build a message for sending it.<br>
@@ -431,8 +244,7 @@
                                     </code>
                                 </li>
                                 <li>
-                                    <span clas="red">Important note</span>, before to forget to disconnect when
-                                    distroying the scene:<br>
+                                    <span clas="red">Important note</span>, before to forget to disconnect when distroying the scene:<br>
                                     <code>
                                         public void OnDestroy(){<br>
                                         &nbsp;&nbsp;&nbsp;&nbsp;
@@ -514,7 +326,7 @@
         integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
         crossorigin="anonymous"></script>
 
-    <script src="<c:url value="/resources/js/account.js" />" >
+    <script src="<c:url value="/resources/js/dev_account.js" />" >
     </script>
 </body>
 

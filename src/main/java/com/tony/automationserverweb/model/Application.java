@@ -1,5 +1,8 @@
 package com.tony.automationserverweb.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
+@JsonIgnoreProperties("account")
 public class Application {
     private Long id;
     private String name;
@@ -47,7 +50,7 @@ public class Application {
         if (obj == null)
             return false;
         if (obj instanceof Application)
-            return ((User) obj).getId() == this.getId();
+            return ((Application) obj).getId() == this.getId();
         if (obj instanceof Long)
             return ((Long) obj).equals(this.getId());
         return false;

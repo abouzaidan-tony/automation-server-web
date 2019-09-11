@@ -2,6 +2,7 @@ package com.tony.automationserverweb.auth;
 
 import java.util.ArrayList;
 import java.util.List;
+
 import com.tony.automationserverweb.dao.DevAccountRepositoryImpl;
 import com.tony.automationserverweb.helper.Helper;
 import com.tony.automationserverweb.model.DevAccount;
@@ -36,9 +37,15 @@ public class DevAccountAuthenticationProvider implements AuthenticationProvider 
         if(!Helper.EncodingMatches(password, user.getPasswordHash()))
             throw new BadCredentialsException("Authentication failed for " + email);
 
+        if(!user.isVerified())
+            throw new BadCredentialsException("Authentication failed for " + email);
+
         List<GrantedAuthority> grantedAuthorities = new ArrayList<>();
         if(user.getOtp() == null)
             grantedAuthorities.add(new SimpleGrantedAuthority("ROLE_DEV"));
+        else
+            grantedAuthorities.add(new SimpleGrantedAuthority("ROLE_DEV_N"));
+
         Authentication auth = new UsernamePasswordAuthenticationToken(user.getId(), user.getPasswordHash(), grantedAuthorities);
         return auth;
     }

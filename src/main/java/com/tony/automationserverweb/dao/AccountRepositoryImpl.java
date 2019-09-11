@@ -10,10 +10,12 @@ import java.util.LinkedList;
 import java.util.List;
 
 import com.tony.automationserverweb.model.Account;
+import com.tony.automationserverweb.model.Application;
 import com.tony.automationserverweb.model.Device;
 import com.tony.automationserverweb.model.User;
 import com.tony.automationserverweb.helper.Helper;
 import com.tony.automationserverweb.mapper.AccountRowMapper;
+import com.tony.automationserverweb.mapper.ApplicationRowMapper;
 import com.tony.automationserverweb.mapper.DeviceRowMapper;
 import com.tony.automationserverweb.mapper.UserRowMapper;
 
@@ -48,11 +50,21 @@ public class AccountRepositoryImpl implements IRepository<Account, Long> {
     @Autowired 
     private DeviceRowMapper deviceRowMapper;
 
+    @Autowired
+    private ApplicationRowMapper applicationRowMapper;
+
     private static final String countQuery = "SELECT count(*) FROM account WHERE email = ?";
     private static final String insertQuery = "INSERT INTO account (email, password, token, nickname, otp) VALUES (?, ?, ?, ?, ?)";
     private static final String updateQuery = "UPDATE account SET email = ?, password = ?, token = ?, nickname = ?, otp = ? WHERE id = ?";
-    private static final String selectQuery = "SELECT account.id account_id, nickname, email, password, token, otp, device.id device_id, device_key, device.connected d_connected, user.id user_id, user_key, user.connected u_connected FROM account LEFT JOIN device ON account.id = device.account_id LEFT JOIN user ON account.id = user.account_id ";
+    // private static final String selectQuery = "SELECT account.id account_id, nickname, email, password, token, otp, device.id device_id, device_key, device.connected d_connected, user.id user_id, user_key, user.connected u_connected FROM account LEFT JOIN device ON account.id = device.account_id LEFT JOIN user ON account.id = user.account_id LEFT JOIN subscriptions ON subscriptions.account_id = account.id LEFT JOIN application ON application.id = subscriptions.app_id ";
+    private static final String selectQuery = "SELECT * FROM (SELECT 1 x, account.id account_id, nickname, email, password, token, otp, null device_id, null device_key, null d_connected, null user_id, null user_key, null u_connected, null app_id, null app_name, null app_token, null dev_account_id FROM account " +
+    "UNION ALL SELECT 2, subscriptions.account_id, null, null, null, null, null, null, null, null, null, null, null, application.id app_id, app_name, app_token, dev_account_id FROM application INNER JOIN subscriptions ON subscriptions.app_id = application.id INNER JOIN account ON account.id = subscriptions.account_id " +
+    "UNION ALL SELECT 3, account_id, null, null, null, null, null, device.id device_id, device_key, device.connected d_connected, null, null, null, app_id, null, null, null FROM device "+
+    "UNION ALL SELECT 4, account_id, null, null, null, null, null, null, null, null, user.id user_id, user_key, user.connected u_connected, app_id, null, null, null FROM user) a ";
     private static final String uniqueTokenQuery = "SELECT COUNT(*) FROM account WHERE token = ?";
+    private static final String orderBySelect = " ORDER BY account_id, x";
+    private static final String subscribeQuery = "INSERT INTO subscriptions (account_id, app_id) VALUES (?, ?)";
+    private static final String unsubscribeQuery = "DELETE FROM subscriptions WHERE account_id =? AND app_id = ?";
 
     @Override
     @Transactional
@@ -99,13 +111,13 @@ public class AccountRepositoryImpl implements IRepository<Account, Long> {
 
     @Override
     public Account findOneById(Long id) {
-        List<Account> users = getAllByQuery(selectQuery.concat(" WHERE account.id = " + id));
+        List<Account> users = getAllByQuery(selectQuery.concat(" WHERE account_id = " + id + orderBySelect));
         return users.get(0);
     }
 
     @Override
     public List<Account> getAll() {
-        return getAllByQuery(selectQuery);
+        return getAllByQuery(selectQuery.concat(orderBySelect));
     }
 
     private List<Account> getAllByQuery(String query){
@@ -134,7 +146,7 @@ public class AccountRepositoryImpl implements IRepository<Account, Long> {
         List<Account> list = jdbcTemplate.query(new PreparedStatementCreator(){
             @Override
             public PreparedStatement createPreparedStatement(Connection con) throws SQLException {
-                PreparedStatement ps = con.prepareStatement(selectQuery.concat(" WHERE email = ?"));
+                PreparedStatement ps = con.prepareStatement(selectQuery.concat(" WHERE email = ?").concat(orderBySelect));
                 ps.setString(1, email);
                 return ps;
             }
@@ -155,34 +167,33 @@ public class AccountRepositoryImpl implements IRepository<Account, Long> {
             int usrIdx = 0;
             int deviceIdx = 0;
             int userIdx = 0;
-            Long deviceId = null;
-            Long userId = null;
+            int appIdx = 0;
+            
             while (rs.next()) {
-                if (account == null || account.getId() != rs.getLong("account_id")) {
+
+                int x = rs.getInt("x");
+                if(x == 1){
                     account = accountRowMapper.mapRow(rs, usrIdx++);
                     account.setDevices(new LinkedList<>());
                     deviceRowMapper.setParentUser(account);
                     userRowMapper.setParentUser(account);
                     users.add(account);
-                }
-
-                Long a = rs.getLong("device_id");
-                if (!rs.wasNull() && deviceId != a)
-                {
-                    deviceId = a;
+                }else if (x == 2){
+                    Application d = applicationRowMapper.mapRow(rs, appIdx++);
+                    account.getSubscriptions().add(d);
+                }else if (x == 3){
+                    Long rowAppId = rs.getLong("app_id");
+                    Application app = Helper.getAppFromList(account.getSubscriptions(), rowAppId);
+                    deviceRowMapper.setApplication(app);
                     Device d = deviceRowMapper.mapRow(rs, deviceIdx++);
                     account.getDevices().add(d);
-                }
-                
-
-                Long b = rs.getLong("user_id");
-                if (!rs.wasNull() && userId != b)
-                {
-                    userId = b;
+                }else if (x == 4){
+                    Long rowAppId = rs.getLong("app_id");
+                    Application app = Helper.getAppFromList(account.getSubscriptions(), rowAppId);
+                    userRowMapper.setApplication(app);
                     User u = userRowMapper.mapRow(rs, userIdx++);
                     account.getUsers().add(u);
                 }
-                
             }
             return users;
         }
@@ -191,5 +202,24 @@ public class AccountRepositoryImpl implements IRepository<Account, Long> {
 
     public Integer getCountUsersByEmail(String email){
         return jdbcTemplate.queryForObject(countQuery, new Object[] {email}, Integer.class);
+    }
+
+    public void subscribe(Account object, Application application) {
+        jdbcTemplate.update(con -> {
+            PreparedStatement ps = con.prepareStatement(subscribeQuery);
+            ps.setLong(1, object.getId());
+            ps.setLong(2, application.getId());
+            return ps;
+        });
+    }
+
+    public Account unsubscribe(Account object, Application application) {
+        jdbcTemplate.update(con -> {
+            PreparedStatement ps = con.prepareStatement(unsubscribeQuery);
+            ps.setLong(1, object.getId());
+            ps.setLong(2, application.getId());
+            return ps;
+        });
+        return object;
     }
 }

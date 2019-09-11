@@ -13,6 +13,8 @@ public abstract class Client {
 
     private Account account;
 
+    private Application application;
+
     public void setConnected(boolean connected) {
         this.connected = connected;
     }
@@ -25,6 +27,18 @@ public abstract class Client {
         if(account == null)
             return null;
         return account.getId();
+    }
+
+    public Long getAppId(){
+        if(application == null)
+            return null;
+        return application.getId();
+    }
+
+    public String getAppName(){
+        if(application == null)
+            return null;
+        return application.getName();
     }
 
     public void setAccount(Account account) {
@@ -52,5 +66,13 @@ public abstract class Client {
 
     public void setId(long id) {
         this.id = id;
+    }
+
+    public void setApplication(Application application){
+        this.application = application;
+    }
+
+    public Application getApplication(){
+        return application;
     }
 }

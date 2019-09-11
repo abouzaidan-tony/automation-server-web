@@ -3,27 +3,37 @@
 	http://www.springframework.org/schema/security
 	http://www.springframework.org/schema/security/spring-security-4.2.xsd">
 
-    <http auto-config="true">
+    <http pattern="/resources/**" security="none" />
+
+    <http use-expressions="true" auto-config="true" pattern="/dev/**">
         <intercept-url pattern="/j_spring_security_check" access="permitAll()" />
         <intercept-url pattern="/accessdenied" access="permitAll()" />
-        <intercept-url pattern="/" access="permitAll()" />
+        <intercept-url pattern="/dev/account/**" access="hasRole('ROLE_DEV')" />
+        <form-login login-page="/dev/login" authentication-success-handler-ref="authenticationSuccessHandler" 
+            username-parameter="username" password-parameter="password" login-processing-url="/dev/postLogin"
+            authentication-failure-url="/devlogin?error=true"/>
+        <logout logout-success-url="/dev/logout" />
+        <csrf />
+    </http>
+
+    <http use-expressions="true" auto-config="true">
+        <intercept-url pattern="/j_spring_security_check" access="permitAll()" />
+        <intercept-url pattern="/accessdenied" access="permitAll()" />
         <intercept-url pattern="/signup" access="permitAll()" />
         <intercept-url pattern="/account/**" access="hasRole('ROLE_USER')" />
-        <intercept-url pattern="/dev/account/**" access="hasRole('ROLE_DEV')" />
         <form-login login-page="/login" authentication-success-handler-ref="authenticationSuccessHandler"
-            username-parameter="username" password-parameter="password"
+            username-parameter="username" password-parameter="password" login-processing-url="/postLogin"
             authentication-failure-url="/login?error=true"/>
         <logout logout-success-url="/logout" />
-        <form-login login-page="/dev/login" authentication-success-handler-ref="authenticationSuccessHandler" 
-            username-parameter="username" password-parameter="password" 
-            authentication-failure-url="/dev/login?error=true" />
+
         <csrf/>
     </http>
 
     <beans:bean id="authenticationSuccessHandler" class="com.tony.automationserverweb.auth.RedirectAuthenticationSuccessHandler" />
 
-    <authentication-manager>
+    <authentication-manager id="myAuthManager">
         <authentication-provider ref="accountAuthenticationProvider"/>
+        <authentication-provider ref="devAccountAuthenticationProvider"/>
     </authentication-manager>
 
 </beans:beans>

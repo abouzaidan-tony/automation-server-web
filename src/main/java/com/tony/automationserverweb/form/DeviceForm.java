@@ -4,12 +4,14 @@ import java.util.HashMap;
 import java.util.Map;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.tony.automationserverweb.model.Application;
 import com.tony.automationserverweb.model.Device;
 
 @JsonIgnoreProperties({ "validated", "errors" })
 public class DeviceForm implements Form<Device> {
 
     public String deviceKey;
+    public Long applicationId;
 
     private boolean validated;
     private HashMap<String, String> errors;
@@ -43,7 +45,17 @@ public class DeviceForm implements Form<Device> {
 
     public Device fill(){
         Device d = new Device();
+        d.setApplication(new Application());
+        d.getApplication().setId(applicationId);
         d.setKey(deviceKey);
         return d;
+    }
+
+    public Long getApplicationId() {
+        return applicationId;
+    }
+
+    public void setApplicationId(Long applicationId) {
+        this.applicationId = applicationId;
     }
 }

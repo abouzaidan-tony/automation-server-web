@@ -3,6 +3,7 @@ package com.tony.automationserverweb.auth;
 import java.util.ArrayList;
 import java.util.List;
 
+
 import com.tony.automationserverweb.dao.AccountRepositoryImpl;
 import com.tony.automationserverweb.helper.Helper;
 import com.tony.automationserverweb.model.Account;
@@ -40,6 +41,8 @@ public class AccountAuthenticationProvider implements AuthenticationProvider {
         List<GrantedAuthority> grantedAuthorities = new ArrayList<>();
         if(user.getOtp() == null)
             grantedAuthorities.add(new SimpleGrantedAuthority("ROLE_USER"));
+        else
+            grantedAuthorities.add(new SimpleGrantedAuthority("ROLE_USER_N"));
         Authentication auth = new UsernamePasswordAuthenticationToken(user.getId(), user.getPasswordHash(), grantedAuthorities);
         return auth;
     }

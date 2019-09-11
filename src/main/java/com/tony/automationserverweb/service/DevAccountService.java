@@ -27,9 +27,11 @@ public class DevAccountService {
     public DevAccount createAccount(DevAccount account){
         account.setPasswordHash(Helper.Encode(account.getPasswordHash()));
         Integer count = devAccountRepositoryImpl.getCountAccountsByEmail(account.getEmail());
-        sendAccountVerification(account, false);
+        if(account.getUnityInvoice() != null)
+            account.setVerified(true);
         if(count != 0)
             throw new EmailAlreadyExistsException();
+        sendAccountVerification(account, false);
         account = devAccountRepositoryImpl.insert(account);
 
         return account;
@@ -41,7 +43,7 @@ public class DevAccountService {
         String otp = Helper.generateOTP();
         account.setOtp(otp);
         try{
-            mailService.sendMail(account.getEmail(), "Account Verification", "Please use this code : " + otp + " to verify your account\n\nThank you!");
+            mailService.sendMail(account.getEmail(), "Developer Account Verification", "Please use this code : " + otp + " to verify your account\n\nThank you!");
         }catch(Exception ex){}
 
         if(save)
@@ -57,23 +59,22 @@ public class DevAccountService {
         return true;
     }
 
-    public void AddApplication(DevAccount account, Application app) {
-        if (account.getApplicatons().size() > 2)
+    public void addApplication(DevAccount account, Application app) {
+        if (account.getApplications().size() >= 2)
             throw new MaximumAppsReachedException();
         
         String token = applicationRepositoryImpl.generateUniqueToken();
         app.setToken(token);
 
         app.setAccount(account);
-        account.getApplicatons().add(app);
+        account.getApplications().add(app);
         applicationRepositoryImpl.insert(app);
     }
 
-    public void removeApplication(DevAccount account, String appToken) {
+    public void removeApplication(DevAccount account, Application app) {
         boolean duplicate = false;
-        Application app = null;
-        for (Application var : account.getApplicatons()){
-            if (appToken.equals(var.getToken())) {
+        for (Application var : account.getApplications()){
+            if (app.getToken().equals(var.getToken())) {
                 duplicate = true;
                 app = var;
                 break;
@@ -83,7 +84,7 @@ public class DevAccountService {
         if (!duplicate)
             throw new ResourceNotFoundException();
         app.setAccount(account);
-        account.getApplicatons().remove(app);
+        account.getApplications().remove(app);
         applicationRepositoryImpl.delete(app);
     }
 

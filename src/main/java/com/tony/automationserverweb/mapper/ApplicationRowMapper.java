@@ -25,7 +25,8 @@ public class ApplicationRowMapper implements RowMapper<Application> {
         Application d = new Application();
         d.setId(rs.getLong("app_id"));
         d.setToken(rs.getString("app_token"));
-        Long id = rs.getLong("account_id");
+        d.setName(rs.getString("app_name"));
+        Long id = rs.getLong("dev_account_id");
         if(account != null)
             d.setAccount(account);
         else if(!rs.wasNull())

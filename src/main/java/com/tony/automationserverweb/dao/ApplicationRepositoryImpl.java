@@ -24,11 +24,11 @@ public class ApplicationRepositoryImpl implements IRepository<Application, Long>
     @Autowired
     private ApplicationRowMapper applicationRowMapper;
 
-    private static final String insertQuery = "INSERT INTO application (name, token, account_id) VALUES (?, ?, ?)";
-    private static final String updateQuery = "UPDATE application SET name = ?, token = ?, account_id = ? WHERE id = ?";
-    private static final String selectQuery = "SELECT application.id account_id, token app_token, name app_name FROM application";
+    private static final String insertQuery = "INSERT INTO application (app_name, app_token, dev_account_id) VALUES (?, ?, ?)";
+    private static final String updateQuery = "UPDATE application SET app_name = ?, app_token = ?, dev_account_id = ?, WHERE id = ?";
+    private static final String selectQuery = "SELECT application.id app_id, app_token, app_name, dev_account_id FROM application";
     private static final String deleteQuery = "DELETE FROM application WHERE id = ?";
-    private static final String uniqueTokenQuery = "SELECT COUNT(*) FROM application WHERE token = ?";
+    private static final String uniqueTokenQuery = "SELECT COUNT(*) FROM application WHERE app_token = ?";
 
     @Override
     @Transactional
@@ -39,7 +39,7 @@ public class ApplicationRepositoryImpl implements IRepository<Application, Long>
             PreparedStatement ps = con.prepareStatement(insertQuery, Statement.RETURN_GENERATED_KEYS);
             ps.setString(1, object.getName());
             ps.setString(2, object.getToken());
-            ps.setLong(1, object.getAccountId());
+            ps.setLong(3, object.getAccountId());
             return ps;
         }, keyHolder);
 
@@ -63,7 +63,16 @@ public class ApplicationRepositoryImpl implements IRepository<Application, Long>
 
     @Override
     public Application findOneById(Long id) {
-        List<Application> users = getAllByQuery(selectQuery.concat(" WHERE account.id = " + id));
+        List<Application> users = getAllByQuery(selectQuery.concat(" WHERE application.id = ?"), new Object[] {id});
+        if(users.size() == 0)
+            return null;
+        return users.get(0);
+    }
+
+    public Application findOneByToken(String token) {
+        List<Application> users = getAllByQuery(selectQuery.concat(" WHERE app_token = ?"), new Object[] { token});
+        if(users.size() == 0)
+            return null;
         return users.get(0);
     }
 
@@ -74,6 +83,10 @@ public class ApplicationRepositoryImpl implements IRepository<Application, Long>
 
     private List<Application> getAllByQuery(String query){
         return jdbcTemplate.query(query, applicationRowMapper);
+    }
+
+    private List<Application> getAllByQuery(String query, Object [] args){
+        return jdbcTemplate.query(query, args, applicationRowMapper);
     }
     
     public void setJdbcTemplate(JdbcTemplate jdbcTemplate) {

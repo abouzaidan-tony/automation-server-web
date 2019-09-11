@@ -1,9 +1,11 @@
 package com.tony.automationserverweb.controller;
 
 import com.tony.automationserverweb.exception.ApplicationException;
+import com.tony.automationserverweb.form.ApplicationForm;
 import com.tony.automationserverweb.form.DeviceForm;
 import com.tony.automationserverweb.form.UserForm;
 import com.tony.automationserverweb.model.Account;
+import com.tony.automationserverweb.model.Application;
 import com.tony.automationserverweb.model.Device;
 import com.tony.automationserverweb.model.Response;
 import com.tony.automationserverweb.model.User;
@@ -37,7 +39,7 @@ public class AccountController {
             return new ResponseEntity<>(new Response(false, deviceForm.getErrors()), HttpStatus.OK);
         Device d = deviceForm.fill();
 
-        accountService.addDevice(u, d);
+        d = accountService.addDevice(u, d);
 
         return new ResponseEntity<>(new Response(true, d), HttpStatus.OK);
         
@@ -64,7 +66,7 @@ public class AccountController {
             return new ResponseEntity<>(new Response(false, deviceForm.getErrors()), HttpStatus.OK);
         User d = deviceForm.fill();
 
-        accountService.addUser(u, d);
+        d = accountService.addUser(u, d);
 
         return new ResponseEntity<>(new Response(true, d), HttpStatus.OK);
 
@@ -103,5 +105,36 @@ public class AccountController {
         model.addAttribute("devices", u.getDevices());
         model.addAttribute("users", u.getUsers());
         return "account";
+    }
+
+    @PostMapping("/app/subscribe")
+    public @ResponseBody ResponseEntity<Object> appSubscribe(@RequestBody ApplicationForm appForm) {
+        Long userId = (Long) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        Account u = accountService.getAccountRepositoryImpl().findOneById(userId);
+        if (appForm.hasErrors())
+            return new ResponseEntity<>(new Response(false, appForm.getErrors()), HttpStatus.OK);
+        
+        Application d = appForm.fill();
+        d  = accountService.subscribe(u, d);
+        if(d == null)
+            return new ResponseEntity<>(new Response(false, "Cannot subscribe"), HttpStatus.OK);
+
+        return new ResponseEntity<>(new Response(true, d), HttpStatus.OK);
+
+    }
+
+    @PostMapping("/app/unsubscribe")
+    public @ResponseBody Object removeUser(@RequestBody ApplicationForm appForm) {
+        Long userId = (Long) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        Account u = accountService.getAccountRepositoryImpl().findOneById(userId);
+        if (appForm.hasErrors())
+            return new ResponseEntity<>(new Response(false, appForm.getErrors()), HttpStatus.OK);
+        
+        Application d = appForm.fill();
+        d = accountService.unsubscribe(u, d);
+        if(d == null)
+            return new ResponseEntity<>(new Response(false, "Cannot unsubscribe"), HttpStatus.OK);
+
+        return new ResponseEntity<>(new Response(true, null), HttpStatus.OK);
     }
 }

@@ -18,7 +18,9 @@ public class DevAccountRowMapper implements RowMapper<DevAccount> {
         u.setId(rs.getLong("account_id"));
         u.setEmail(rs.getString("email"));
         u.setOtp(rs.getString("otp"));
+        u.setVerified(rs.getBoolean("verified"));
         u.setPasswordHash(rs.getString("password"));
+        u.setUnityInvoice(rs.getString("unity_invoice"));
 		return u;
 	}
 

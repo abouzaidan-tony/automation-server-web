@@ -10,8 +10,14 @@ public class WelcomePageController {
 
     @RequestMapping(value ={"", "/"})
     public String welcomePage(){
-        return "welcome";
+        return "redirect:/login";
     }
+
+    @RequestMapping("/dev")
+    public String devWelcomePage(){
+        return "redirect:/dev/login";
+    }
+
 
     @RequestMapping("/login")
     public String login(@RequestParam(value = "error", required = false) String error, Model model) {
@@ -23,6 +29,9 @@ public class WelcomePageController {
         model.addAttribute("signInTxt", "Sign in as developer");
         model.addAttribute("signInUrl", "/dev/login");
         model.addAttribute("signUpUrl", "/signup");
+        model.addAttribute("formSubmit", "/postLogin");
+
+
 
         model.addAttribute("title", "Membre Login");
         
@@ -40,6 +49,7 @@ public class WelcomePageController {
         model.addAttribute("signInTxt", "Sign in as user");
         model.addAttribute("signInUrl", "/login");
         model.addAttribute("signUpUrl", "/dev/signup");
+        model.addAttribute("formSubmit", "/dev/postLogin");
         
         model.addAttribute("title", "Developer Login");
 

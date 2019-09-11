@@ -39,7 +39,7 @@
                     <img src="<c:url value="/resources/images/img-01.png" />" alt="IMG">
                 </div>
 
-                <form class="login100-form validate-form" name='loginForm' action="<c:url value='login' />"
+                <form class="login100-form validate-form" name='loginForm' action="<c:url value='${formSubmit}' />"
                     method='POST' enctype="application/x-www-form-urlencoded">
 
                     <span class="login100-form-title">

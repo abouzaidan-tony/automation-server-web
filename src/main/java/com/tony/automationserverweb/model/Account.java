@@ -9,7 +9,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 public class Account {
 
     private long id;
-    
+
     private String email;
 
     private String nickname;
@@ -22,11 +22,22 @@ public class Account {
 
     private List<User> users;
 
+    private List<Application> subscriptions;
+
     private String otp;
 
     public Account() {
         devices = new ArrayList<>();
         users = new ArrayList<>();
+        setSubscriptions(new ArrayList<>());
+    }
+
+    public List<Application> getSubscriptions() {
+        return subscriptions;
+    }
+
+    public void setSubscriptions(List<Application> subscriptions) {
+        this.subscriptions = subscriptions;
     }
 
     public List<User> getUsers() {

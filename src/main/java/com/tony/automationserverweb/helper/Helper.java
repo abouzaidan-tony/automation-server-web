@@ -1,5 +1,10 @@
 package com.tony.automationserverweb.helper;
 
+import java.util.List;
+import java.util.Optional;
+
+import com.tony.automationserverweb.model.Application;
+
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 public class Helper {
@@ -43,6 +48,13 @@ public class Helper {
     public static boolean EncodingMatches(String password, String encodedPassword) {
         BCryptPasswordEncoder encoder = new BCryptPasswordEncoder(4);
         return encoder.matches(password, encodedPassword);
+    }
+
+    public static Application getAppFromList(List<Application> apps, final Long id){
+        Optional<Application> application = apps.stream().filter(app -> app.getId().equals(id)).findFirst();
+        if(application.isPresent())
+            return application.get();
+        return null;
     }
 
 }

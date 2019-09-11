@@ -23,9 +23,9 @@ public class DeviceRepositoryImpl implements IRepository<Device, Long> {
     private DeviceRowMapper deviceRowMapper;
 
     private static final String deleteQuery = "DELETE FROM device WHERE id = ?";
-    private static final String insertQuery = "INSERT INTO device (device_key, account_id, connected) VALUES (?, ?, 0)";
-    private static final String updateQuery = "UPDATE device SET device_key = ?, account_id = ? WHERE id = ?";
-    private static final String selectQuery = "SELECT id device_id, device_key, connected d_connected, account_id FROM device";
+    private static final String insertQuery = "INSERT INTO device (device_key, account_id, connected, app_id) VALUES (?, ?, 0, ?)";
+    private static final String updateQuery = "UPDATE device SET device_key = ?, account_id = ?, app_id = ? WHERE id = ?";
+    private static final String selectQuery = "SELECT id device_id, device_key, connected d_connected, account_id, app_id FROM device";
 
     @Override
     public Device insert(Device object) {
@@ -35,6 +35,7 @@ public class DeviceRepositoryImpl implements IRepository<Device, Long> {
             PreparedStatement ps = con.prepareStatement(insertQuery, Statement.RETURN_GENERATED_KEYS);
             ps.setString(1, object.getKey());
             ps.setLong(2, object.getAccountId());
+            ps.setLong(3, object.getAppId());
             return ps;
         }, keyHolder);
         object.setId(keyHolder.getKey().longValue());
@@ -47,6 +48,9 @@ public class DeviceRepositoryImpl implements IRepository<Device, Long> {
             PreparedStatement ps = con.prepareStatement(updateQuery);
             ps.setString(1, object.getKey());
             ps.setLong(2, object.getAccountId());
+            ps.setLong(3, object.getAppId());
+            ps.setLong(4, object.getId());
+
             return ps;
         });
         return object;

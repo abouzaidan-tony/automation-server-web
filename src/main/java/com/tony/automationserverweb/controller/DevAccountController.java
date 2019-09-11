@@ -1,13 +1,11 @@
 package com.tony.automationserverweb.controller;
 
 import com.tony.automationserverweb.exception.ApplicationException;
-import com.tony.automationserverweb.form.DeviceForm;
-import com.tony.automationserverweb.form.UserForm;
-import com.tony.automationserverweb.model.Account;
-import com.tony.automationserverweb.model.Device;
+import com.tony.automationserverweb.form.ApplicationForm;
+import com.tony.automationserverweb.model.Application;
+import com.tony.automationserverweb.model.DevAccount;
 import com.tony.automationserverweb.model.Response;
-import com.tony.automationserverweb.model.User;
-import com.tony.automationserverweb.service.AccountService;
+import com.tony.automationserverweb.service.DevAccountService;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -27,62 +25,34 @@ import org.springframework.web.bind.annotation.ResponseBody;
 public class DevAccountController {
 
     @Autowired
-    private AccountService accountService;
+    private DevAccountService devAccountService;
 
-    @PostMapping("/device/add")
-    public @ResponseBody ResponseEntity<Object> addDevice(@RequestBody DeviceForm deviceForm){
+    @PostMapping("/app/add")
+    public @ResponseBody ResponseEntity<Object> addDevice(@RequestBody ApplicationForm appForm){
         Long userId = (Long) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        Account u = accountService.getAccountRepositoryImpl().findOneById(userId);
-        if(deviceForm.hasErrors())
-            return new ResponseEntity<>(new Response(false, deviceForm.getErrors()), HttpStatus.OK);
-        Device d = deviceForm.fill();
+        DevAccount u = devAccountService.getDevAccountRepositoryImpl().findOneById(userId);
+        if(appForm.hasErrors())
+            return new ResponseEntity<>(new Response(false, appForm.getErrors()), HttpStatus.OK);
+        Application d = appForm.fill();
 
-        accountService.addDevice(u, d);
+        devAccountService.addApplication(u, d);
 
         return new ResponseEntity<>(new Response(true, d), HttpStatus.OK);
         
     }
 
-    @PostMapping("/device/remove")
-    public @ResponseBody Object removeDevice(@RequestBody DeviceForm deviceForm) {
+    @PostMapping("/app/remove")
+    public @ResponseBody Object removeDevice(@RequestBody ApplicationForm appForm) {
         Long userId = (Long) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        Account u = accountService.getAccountRepositoryImpl().findOneById(userId);
-        if (deviceForm.hasErrors())
-            return new ResponseEntity<>(new Response(false, deviceForm.getErrors()), HttpStatus.OK);
-        Device d = deviceForm.fill();
+        DevAccount u = devAccountService.getDevAccountRepositoryImpl().findOneById(userId);
+        if (appForm.hasErrors())
+            return new ResponseEntity<>(new Response(false, appForm.getErrors()), HttpStatus.OK);
+        Application d = appForm.fill();
 
-        accountService.removeDevice(u, d);
+        devAccountService.removeApplication(u, d);
 
         return new ResponseEntity<>(new Response(true, null), HttpStatus.OK);
     }
-
-    @PostMapping("/user/add")
-    public @ResponseBody ResponseEntity<Object> addUser(@RequestBody UserForm deviceForm) {
-        Long userId = (Long) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        Account u = accountService.getAccountRepositoryImpl().findOneById(userId);
-        if (deviceForm.hasErrors())
-            return new ResponseEntity<>(new Response(false, deviceForm.getErrors()), HttpStatus.OK);
-        User d = deviceForm.fill();
-
-        accountService.addUser(u, d);
-
-        return new ResponseEntity<>(new Response(true, d), HttpStatus.OK);
-
-    }
-
-    @PostMapping("/user/remove")
-    public @ResponseBody Object removeUser(@RequestBody UserForm deviceForm) {
-        Long userId = (Long) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        Account u = accountService.getAccountRepositoryImpl().findOneById(userId);
-        if (deviceForm.hasErrors())
-            return new ResponseEntity<>(new Response(false, deviceForm.getErrors()), HttpStatus.OK);
-        User d = deviceForm.fill();
-
-        accountService.removeUser(u, d);
-
-        return new ResponseEntity<>(new Response(true, null), HttpStatus.OK);
-    }
-
 
     @ExceptionHandler
     public @ResponseBody ResponseEntity<Response> handleErrors(Exception ex){
@@ -98,10 +68,9 @@ public class DevAccountController {
     @GetMapping
     public String userMainPage(ModelMap model){
         Long userId = (Long) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        Account u = accountService.getAccountRepositoryImpl().findOneById(userId);
+        DevAccount u = devAccountService.getDevAccountRepositoryImpl().findOneById(userId);
         model.addAttribute("account", u);
-        model.addAttribute("devices", u.getDevices());
-        model.addAttribute("users", u.getUsers());
-        return "account";
+        model.addAttribute("apps", u.getApplications());
+        return "dev_account";
     }
 }

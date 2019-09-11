@@ -175,7 +175,7 @@
                                 <li>
                                     Initialize the session : <br>
                                     <code>
-                                        session = new ClientSession("API Token Here", "Device Code Here");<br>
+                                        session = new ClientSession("API Token Here", "APP Token Here", "Device Code Here");<br>
                                     </code>
                                 </li>
                                 <li>
@@ -184,6 +184,9 @@
                                         session.OnConnected += Connected;<br>
                                         session.onMessageReady += Receive;<br>
                                         session.OnConnectionFailed += Failed;<br>
+                                        OnAuthenticationFailed += () => {<br>
+                                        &nbsp;&nbsp;&nbsp;&nbsp;Debug.Log("Auth Failed");<br>
+                                        };<br>
                                     </code>
                                     Where <code>Connected</code>, <code>Receive</code> and <code>Failed</code> are function to be defined
                                 </li>
@@ -264,8 +267,11 @@
                                     Create a WiFiClient Object and DeviceSession object as follow:<br>
                                     <code>
                                         WiFiClient client;<br>
-                                        DeviceSession session(client, "API TOKEN", "DEVICE CODE");
+                                        DeviceSession session(client, "API TOKEN", "APP TOKEN", "DEVICE CODE");<br>
                                     </code>
+                                    Note:<br>
+                                    The API Token is always of 15 characters, same for APP Token. <br>
+                                    Device code is of 5 characters.
                                 </li>
                                 <li>
                                     Connect to WIFI: <br>

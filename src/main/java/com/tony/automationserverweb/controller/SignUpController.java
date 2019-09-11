@@ -116,7 +116,7 @@ public class SignUpController {
 
         String url = null;
         String currentUrl = request.getRequestURI();
-        if (currentUrl.equals("/verify"))
+        if (currentUrl.equals("/signup/verify"))
             url = "redirect:/login";
         else
             url = "redirect:/dev/login";

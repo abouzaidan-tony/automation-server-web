@@ -299,11 +299,11 @@
                 </table>
             </div>
 
-            <div class="container-fluid page" id="page4">
+            <div class="container-fluid page" id="page5">
                 Soon...
             </div>
 
-            <div class="container-fluid page" id="page5">
+            <div class="container-fluid page" id="page6">
                 <p>
                     Thank you for choosing this service. <br><br>
 
@@ -342,166 +342,6 @@
                         <li>
                             Communication can only be made between a device and user. Users cannot communicate together.
                             Same for devices.
-                        </li>
-                    </ul>
-                </p>
-            </div>
-
-            <div class="container-fluid page" id="page6">
-                <h2>Developers</h2>
-                <p>
-                    <ul>
-                        <li>
-                            You should allow users to sign up for an account on this website so you clients devices dont
-                            conflic.
-                        </li>
-                        <li>
-                            Unity Help:
-                            <ol>
-                                <li>
-                                    Initialize the session : <br>
-                                    <code>
-                                        session = new ClientSession("API Token Here", "Device Code Here");<br>
-                                    </code>
-                                </li>
-                                <li>
-                                    Set the events :<br>
-                                    <code>
-                                        session.OnConnected += Connected;<br>
-                                        session.onMessageReady += Receive;<br>
-                                        session.OnConnectionFailed += Failed;<br>
-                                    </code>
-                                    Where <code>Connected</code>, <code>Receive</code> and <code>Failed</code> are
-                                    function to be defined
-                                </li>
-                                <li>
-                                    For sending Messages, build a message for sending it.<br>
-                                    <code>
-                                        Message m = new MessageBuilder()<br>
-                                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                                                    .setMessgeType(MessageType.DATA)<br>
-                                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                                                    .setMessage("HELLO")<br>
-                                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                                                    .setToDeviceAddress("DESTINATION DEVICE CODE")<br>
-                                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                                                    .build();<br>
-                                        session.sendMessage(m);<br>
-                                    </code>
-                                </li>
-                                <li>
-                                    To send binary data, build a binary message:<br>
-                                    <code>
-                                        byte[] messageBytes = {0x62, 0x69, 0x6e, 0x61, 0x72, 0x79, 0x20, 0x74, 0x65, 0x78, 0x74};<br>
-                                        Message msg = new MessageBuilder()<br>
-                                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                                                    .setMessgeType(MessageType.DATA)<br>
-                                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                                                    .setMessage(messageBytes)<br>
-                                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                                                    .setToDeviceAddress("DESTINATION DEVICE CODE")<br>
-                                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                                                    .build();<br>
-                                        session.sendMessage(msg);<br>
-                                    </code>
-                                </li>
-                                <li>
-                                    To Receive a message: <br>
-                                    <code>
-                                        public void Receive(Message message){<br>
-                                        &nbsp;&nbsp;&nbsp;&nbsp;
-                                            switch(message.getType()){<br>
-                                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                                                case MessageType.ERROR:<br>
-                                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                                                    Debug.LogWarning(message.getDataAsString());<br>
-                                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                                                    break;<br>
-                                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                                                case MessageType.DATA:<br>
-                                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                                                case MessageType.BROADCAST:<br>
-                                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                                                    Debug.Log(message.getDataAsString());<br>
-                                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                                                    break;<br>
-                                        &nbsp;&nbsp;&nbsp;&nbsp;
-                                            }<br>
-                                        }<br>
-                                    </code>
-                                </li>
-                                <li>
-                                    <span clas="red">Important note</span>, before to forget to disconnect when
-                                    distroying the scene:<br>
-                                    <code>
-                                        public void OnDestroy(){<br>
-                                        &nbsp;&nbsp;&nbsp;&nbsp;
-                                            session.Disconnect();<br>
-                                        }<br>
-                                    </code>
-                                </li>
-                                <li>
-                                    <code>session.isConnected()</code> checks if you are still connected or not.
-                                </li>
-                            </ol>
-                        </li>
-                        <li>
-                            Arduino Helper:
-                            <ol>
-                                <li>
-                                    Create a WiFiClient Object and DeviceSession object as follow:<br>
-                                    <code>
-                                        WiFiClient client;<br>
-                                        DeviceSession session(client, "API TOKEN", "DEVICE CODE");
-                                    </code>
-                                </li>
-                                <li>
-                                    Connect to WIFI: <br>
-                                    <code>
-                                        WiFi.mode(WIFI_STA);<br>
-                                        WiFi.begin(SSID, PASSWORD);<br>
-                                        while(WiFi.status() != WL_CONNECTED);<br>
-                                    </code>
-                                </li>
-                                <li>
-                                    Subscribe to receiving messages:<br>
-                                    <code>
-                                        session.setOnMessageReceived(OnMessageReceived);<br>
-                                    </code>
-                                    and <code>OnMessageReceived</code> is defined as follow :<br>
-                                    <code>
-                                        void OnMessageReceived(Message * message){<br>
-                                            &nbsp;&nbsp;&nbsp;&nbsp;int length = message->getDataLength();<br>
-                                            &nbsp;&nbsp;&nbsp;&nbsp;char * data = message->getData();<br>
-                                            &nbsp;&nbsp;&nbsp;&nbsp;for(int i=0; i&#60;length; i++)<br>
-                                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Serial.println(data[i]);<br>
-                                            &nbsp;&nbsp;&nbsp;&nbsp;Serial.println("");<br>
-                                        }<br>
-                                    </code>
-                                </li>
-                                <li>
-                                    Connect the session: <br>
-                                    <code>
-                                        bool result = session.connect();<br>
-                                        while(!result); //cannot initiate session <br>
-                                    </code>
-                                </li>
-                                <li>
-                                    In the loop function, call :<br>
-                                    <code>
-                                        session.update();
-                                    </code>
-                                </li>
-                                <li>
-                                    To send Message:<br>
-                                    <code>
-                                        int messageToSendLength = 15;<br>
-                                        bool keepAlive = true; // if set to false, the connection will be closed after this message.<br>
-                                        Message m(DATA, "DeviceCode", "Message to send", messageToSendLength, keepAlive);<br>
-                                        session.sendMessage(m);
-                                    </code>
-                                </li>
-                            </ol>
                         </li>
                     </ul>
                 </p>

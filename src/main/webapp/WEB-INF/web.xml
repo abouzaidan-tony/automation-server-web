@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <web-app>
     <display-name>Automation Server APP</display-name>
-    
+
     <welcome-file-list>
         <welcome-file>index.jsp</welcome-file>
     </welcome-file-list>
@@ -51,6 +51,29 @@
             <transport-guarantee>CONFIDENTIAL</transport-guarantee>
         </user-data-constraint>
     </security-constraint>
+
+    <filter>
+        <filter-name>ExpiresFilter</filter-name>
+        <filter-class>org.apache.catalina.filters.ExpiresFilter</filter-class>
+        <init-param>
+           <param-name>ExpiresByType image</param-name>
+           <param-value>access plus 10 days</param-value>
+        </init-param>
+        <init-param>
+           <param-name>ExpiresByType text/css</param-name>
+           <param-value>access plus 10 days</param-value>
+        </init-param>
+        <init-param>
+           <param-name>ExpiresByType application/javascript</param-name>
+           <param-value>access plus 10 days</param-value>
+        </init-param>
+       </filter>
+       
+       <filter-mapping>
+        <filter-name>ExpiresFilter</filter-name>
+        <url-pattern>/resources/*</url-pattern>
+        <dispatcher>REQUEST</dispatcher>
+       </filter-mapping>
 
     <resources mapping="/resources/**" location="/resources/" cache-period="604800" />
 </web-app>

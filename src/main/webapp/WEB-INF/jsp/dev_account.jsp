@@ -71,6 +71,10 @@
                             <th>Application Number</th>
                             <th>Application Token</th>
                             <th>Application Name</th>
+                            <th>Online Users</th>
+                            <th>Online Devices</th>
+                            <th>Total Online Sessions</th>
+                            <th>Total User Subscriptions</th>
                             <th></th>
                         </tr>
                     </thead>
@@ -87,6 +91,18 @@
                                 </td>
                                 <td>
                                     ${app.name}
+                                </td>
+                                <td>
+                                    ${app.onlineUsers}
+                                </td>
+                                <td>
+                                    ${app.onlineDevices}
+                                </td>
+                                <td>
+                                    ${app.totalSessions}
+                                </td>
+                                <td>
+                                    ${app.totalSubscriptions}
                                 </td>
                                 <td>
                                     <button class="btn btn-danger removeApp">Remove App</button>

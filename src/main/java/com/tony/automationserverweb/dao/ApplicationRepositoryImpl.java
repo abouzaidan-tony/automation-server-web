@@ -29,6 +29,9 @@ public class ApplicationRepositoryImpl implements IRepository<Application, Long>
     private static final String selectQuery = "SELECT application.id app_id, app_token, app_name, dev_account_id FROM application";
     private static final String deleteQuery = "DELETE FROM application WHERE id = ?";
     private static final String uniqueTokenQuery = "SELECT COUNT(*) FROM application WHERE app_token = ?";
+    private static final String onlineDevices = "SELECT COUNT(*) FROM device WHERE connected = 1 AND app_id = ?";
+    private static final String onlineUsers = "SELECT COUNT(*) FROM user WHERE connected = 1 AND app_id = ?";
+    private static final String totalSubscriptions = "SELECT COUNT(*) FROM subscriptions WHERE app_id = ?";
 
     @Override
     @Transactional
@@ -109,5 +112,17 @@ public class ApplicationRepositoryImpl implements IRepository<Application, Long>
             ps.setLong(1, application.getId());
             return ps;
         });
+    }
+
+    public int getOnlineUsers(Application application){
+        return jdbcTemplate.queryForObject(onlineUsers, new Object[]{application.getId()}, Integer.class);
+    }
+
+    public int getOnlineDevices(Application application){
+        return jdbcTemplate.queryForObject(onlineDevices, new Object[]{application.getId()}, Integer.class);
+    }
+
+    public int getTotalSubscriptions(Application application){
+        return jdbcTemplate.queryForObject(totalSubscriptions, new Object[]{application.getId()}, Integer.class);
     }
 }

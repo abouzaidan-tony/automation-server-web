@@ -9,6 +9,11 @@ public class Application {
     private String token;
     private DevAccount account;
 
+    private int onlineUsers;
+    private int onlineDevices;
+    private int totalSessions;
+    private int totalSubscriptions;
+
     public Long getId() {
         return id;
     }
@@ -54,5 +59,37 @@ public class Application {
         if (obj instanceof Long)
             return ((Long) obj).equals(this.getId());
         return false;
+    }
+
+    public int getOnlineUsers() {
+        return onlineUsers;
+    }
+
+    public void setOnlineUsers(int onlineUsers) {
+        this.onlineUsers = onlineUsers;
+    }
+
+    public int getOnlineDevices() {
+        return onlineDevices;
+    }
+
+    public void setOnlineDevices(int onlineDevices) {
+        this.onlineDevices = onlineDevices;
+    }
+
+    public int getTotalSessions() {
+        return totalSessions;
+    }
+
+    public void setTotalSessions(int totalSessions) {
+        this.totalSessions = totalSessions;
+    }
+
+    public int getTotalSubscriptions() {
+        return totalSubscriptions;
+    }
+
+    public void setTotalSubscriptions(int totalSubscriptions) {
+        this.totalSubscriptions = totalSubscriptions;
     }
 }

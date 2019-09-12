@@ -69,6 +69,7 @@ public class DevAccountController {
     public String userMainPage(ModelMap model){
         Long userId = (Long) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         DevAccount u = devAccountService.getDevAccountRepositoryImpl().findOneById(userId);
+        devAccountService.fillOnlineStatuses(u);
         model.addAttribute("account", u);
         model.addAttribute("apps", u.getApplications());
         return "dev_account";

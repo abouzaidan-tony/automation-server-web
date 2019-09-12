@@ -91,4 +91,13 @@ public class DevAccountService {
     public DevAccountRepositoryImpl getDevAccountRepositoryImpl() {
         return devAccountRepositoryImpl;
     }
+
+    public void fillOnlineStatuses(DevAccount account){
+        for (Application var : account.getApplications()) {
+            var.setOnlineDevices(applicationRepositoryImpl.getOnlineDevices(var));
+            var.setOnlineUsers(applicationRepositoryImpl.getOnlineUsers(var));
+            var.setTotalSessions(var.getOnlineDevices() + var.getOnlineUsers());
+            var.setTotalSubscriptions(applicationRepositoryImpl.getTotalSubscriptions(var));
+        }
+    }
 }

@@ -83,7 +83,7 @@ jQuery("#btnAddAppName").click(function () {
             var app = data['data'];
             debugger
             jQuery("#appNameInput").val('')
-            table.append("<tr><td class=\"appCount\"> " + count + "</td><td class=\"appToken\"> " + app['token'] + "</td><td>"+app['name']+"</td> <td> <button class=\"btn btn-danger removeApp\">Remove App</button></td></tr>");
+            table.append("<tr><td class=\"appCount\"> " + count + "</td><td class=\"appToken\"> " + app['token'] + "</td><td>"+app['name']+"</td><td>0</td><td>0</td><td>0</td><td>0</td><td> <button class=\"btn btn-danger removeApp\">Remove App</button></td></tr>");
         }
     })
 })

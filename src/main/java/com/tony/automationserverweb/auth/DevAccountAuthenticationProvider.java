@@ -3,6 +3,8 @@ package com.tony.automationserverweb.auth;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.servlet.http.HttpServletRequest;
+
 import com.tony.automationserverweb.dao.DevAccountRepositoryImpl;
 import com.tony.automationserverweb.helper.Helper;
 import com.tony.automationserverweb.model.DevAccount;
@@ -20,6 +22,8 @@ import org.springframework.stereotype.Component;
 @Component
 public class DevAccountAuthenticationProvider implements AuthenticationProvider {
 
+    @Autowired
+    private HttpServletRequest request;
 
     @Autowired
     private DevAccountRepositoryImpl devAccountRepositoryImpl;
@@ -52,6 +56,8 @@ public class DevAccountAuthenticationProvider implements AuthenticationProvider 
 
     @Override
     public boolean supports(Class<?> authentication) {
+        if(!"/dev/postLogin".equals(request.getRequestURI()))
+            return false;
         return authentication.equals(UsernamePasswordAuthenticationToken.class);
     }
 }

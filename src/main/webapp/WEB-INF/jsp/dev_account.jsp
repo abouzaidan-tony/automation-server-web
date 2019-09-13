@@ -26,7 +26,7 @@
 
         <!-- Sidebar -->
         <div class="bg-light border-right" id="sidebar-wrapper">
-            <div class="sidebar-heading"> User Page </div>
+            <div class="sidebar-heading"> Developer Page </div>
             <div class="list-group list-group-flush">
                 <a href="#" class="list-group-item list-group-item-action bg-light" data-for-page="page1">Applications</a>
                 <a href="#" class="list-group-item list-group-item-action bg-light" data-for-page="page4">Statistics</a>

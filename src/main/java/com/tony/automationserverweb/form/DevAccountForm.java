@@ -108,6 +108,13 @@ public class DevAccountForm implements Form<DevAccount> {
                 errors.put("unityInvoice", "Invalid unity invoice");
             else if(invoices.length() != 1)
                 errors.put("unityInvoice", "Please submit 1 invoice number");
+            else {
+                JSONObject invoice = invoices.getJSONObject(0);
+                String invoicePackage = invoice.getString("package");
+                if(!"ESP WiFi plugin".equals(invoicePackage)){
+                    errors.put("unityInvoice", "This invoice is for " + invoicePackage + " and not for ESP WiFi plugin");
+                }
+            }
 
         }while(false);
        

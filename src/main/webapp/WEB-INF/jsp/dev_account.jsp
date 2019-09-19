@@ -263,7 +263,7 @@
                                     </code>
                                 </li>
                                 <li>
-                                    <span clas="red">Important note</span>, before to forget to disconnect when distroying the scene:<br>
+                                    <span clas="red">Important note</span>, before to forget to disconnect when destroying the scene:<br>
                                     <code>
                                         public void OnDestroy(){<br>
                                         &nbsp;&nbsp;&nbsp;&nbsp;

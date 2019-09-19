@@ -27,7 +27,7 @@ public class DevAccountService {
     public DevAccount createAccount(DevAccount account){
         account.setPasswordHash(Helper.Encode(account.getPasswordHash()));
         Integer count = devAccountRepositoryImpl.getCountAccountsByEmail(account.getEmail());
-        if(account.getUnityInvoice() != null)
+        if(account.getUnityInvoice() != null && account.getUnityInvoice().length() != 0)
             account.setVerified(true);
         if(count != 0)
             throw new EmailAlreadyExistsException();

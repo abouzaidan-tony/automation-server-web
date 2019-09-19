@@ -23,6 +23,7 @@ public class DevAccount {
 
     public DevAccount() {
         setApplications(new ArrayList<>());
+        verified = false;
     }
 
     public List<Application> getApplications() {

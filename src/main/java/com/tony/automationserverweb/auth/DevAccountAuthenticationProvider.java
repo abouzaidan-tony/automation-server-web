@@ -41,14 +41,13 @@ public class DevAccountAuthenticationProvider implements AuthenticationProvider 
         if(!Helper.EncodingMatches(password, user.getPasswordHash()))
             throw new BadCredentialsException("Authentication failed for " + email);
 
-        if(!user.isVerified())
-            throw new BadCredentialsException("Authentication failed for " + email);
-
         List<GrantedAuthority> grantedAuthorities = new ArrayList<>();
-        if(user.getOtp() == null)
+        if(user.getOtp() == null && user.isVerified())
             grantedAuthorities.add(new SimpleGrantedAuthority("ROLE_DEV"));
-        else
+        else if (user.getOtp() != null)
             grantedAuthorities.add(new SimpleGrantedAuthority("ROLE_DEV_N"));
+        else
+            throw new BadCredentialsException("Authentication failed for " + email);
 
         Authentication auth = new UsernamePasswordAuthenticationToken(user.getId(), user.getPasswordHash(), grantedAuthorities);
         return auth;

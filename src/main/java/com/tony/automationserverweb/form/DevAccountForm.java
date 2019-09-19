@@ -91,9 +91,18 @@ public class DevAccountForm implements Form<DevAccount> {
         
         
         boolean isWrong = true;
+
         do{
+
+            if(userInvoice.length() == 0) {
+                isWrong = false;
+                break;
+            }
+
             if(response == null)
                 break;
+
+            
 
             if(!response.getStatusCode().equals(HttpStatus.OK))
                 break;
@@ -103,7 +112,15 @@ public class DevAccountForm implements Form<DevAccount> {
                 break;
             isWrong = false;
 
-            JSONArray invoices = obj.getJSONArray("invoices");
+            Object invoicesObj = obj.get("invoices");
+            JSONArray invoices = null;
+            if(invoicesObj instanceof JSONArray)
+                invoices = (JSONArray) invoicesObj;
+            else {
+                errors.put("unityInvoice", "Invalid unity invoice");
+                break;
+            }
+
             if(invoices.length() == 0)
                 errors.put("unityInvoice", "Invalid unity invoice");
             else if(invoices.length() != 1)

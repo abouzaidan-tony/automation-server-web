@@ -11,7 +11,7 @@
         <intercept-url pattern="/dev/account/**" access="hasRole('ROLE_DEV')" />
         <form-login login-page="/dev/login" authentication-success-handler-ref="authenticationSuccessHandler" 
             username-parameter="username" password-parameter="password" login-processing-url="/dev/postLogin"
-            authentication-failure-url="/devlogin?error=true"/>
+            authentication-failure-url="/dev/login?error=true"/>
         <logout logout-success-url="/dev/logout" />
         <csrf />
     </http>

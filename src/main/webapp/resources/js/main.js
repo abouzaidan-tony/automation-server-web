@@ -43,6 +43,9 @@
                 return false;
             }
         }
+        else if ($(input).attr('name') == 'userInvoice') {
+            return true;
+        }
         else if($(input).attr('type') == 'email') {
             if($(input).val().trim().match(/^([a-zA-Z0-9_\-\.]+)@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.)|(([a-zA-Z0-9\-]+\.)+))([a-zA-Z]{1,5}|[0-9]{1,3})(\]?)$/) == null) {
                 return false;

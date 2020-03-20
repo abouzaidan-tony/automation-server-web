@@ -54,13 +54,13 @@
                         </span>
                     </div>
 
-                    <div class="wrap-input100 validate-input" data-validate="Enter valid invoice number">
+                    <!-- <div class="wrap-input100 validate-input" data-validate="Enter valid invoice number">
                         <form:input path="userInvoice" class="input100" type="text" name="userInvoice" placeholder="Unity Invoice number" />
                         <span class="focus-input100"></span>
                         <span class="symbol-input100">
                             <i class="fa fa-file" aria-hidden="true"></i>
                         </span>
-                    </div>
+                    </div> -->
 
                     <div class="wrap-input100 validate-input" data-validate="Password is required">
                         <form:input path="userPassword" class="input100" type="password" name="userPassword"

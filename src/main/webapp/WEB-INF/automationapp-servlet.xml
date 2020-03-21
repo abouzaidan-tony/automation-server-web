@@ -19,7 +19,7 @@
     <context:component-scan base-package="com.tony.automationserverweb.auth" />
     <mvc:default-servlet-handler />
 
-    <context:property-placeholder location="${CONFIG}/datasource.properties" />
+    <context:property-placeholder location="classpath:datasource.properties" />
     
     <bean id="viewResolver" class="org.springframework.web.servlet.view.UrlBasedViewResolver">
         <property name="viewClass" value="org.springframework.web.servlet.view.JstlView" />

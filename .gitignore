@@ -2,4 +2,4 @@
 /.settings/
 /target/
 .DS_Store
-jdbc.properties
+*.properties

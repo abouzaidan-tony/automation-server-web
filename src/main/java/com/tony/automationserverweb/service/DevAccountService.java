@@ -44,7 +44,9 @@ public class DevAccountService {
         account.setOtp(otp);
         try{
             mailService.sendMail(account.getEmail(), "Developer Account Verification", "Please use this code : " + otp + " to verify your account\n\nThank you!");
-        }catch(Exception ex){}
+        }catch(Exception ex){
+            ex.printStackTrace();
+        }
 
         if(save)
             devAccountRepositoryImpl.update(account);
@@ -55,6 +57,7 @@ public class DevAccountService {
         if(!account.getOtp().equals(otp))
             return false;
         account.setOtp(null);
+        account.setVerified(true);
         devAccountRepositoryImpl.update(account);
         return true;
     }

@@ -10,6 +10,7 @@ import com.tony.automationserverweb.model.Account;
 import com.tony.automationserverweb.model.DevAccount;
 import com.tony.automationserverweb.service.AccountService;
 import com.tony.automationserverweb.service.DevAccountService;
+import com.tony.automationserverweb.service.MailService;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -27,6 +28,9 @@ public class SignUpController {
 
     @Autowired
     private DevAccountService devAccountService;
+
+    @Autowired
+    private MailService mailService;
 
     @Autowired
     private HttpServletRequest request;
@@ -104,6 +108,9 @@ public class SignUpController {
 
         if (account == null)
             return new ModelAndView(url);
+
+        mailService.sendMail(((Account)account).getEmail(), "Developer Account Verification",
+                "Please use this code : " + ((Account) account).getOtp() + " to verify your account\n\nThank you!");
 
         return new ModelAndView("verifyAccount", "verifyForm", new VerificationForm());
     }

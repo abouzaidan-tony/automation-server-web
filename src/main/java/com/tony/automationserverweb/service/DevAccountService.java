@@ -9,11 +9,15 @@ import com.tony.automationserverweb.helper.Helper;
 import com.tony.automationserverweb.model.Application;
 import com.tony.automationserverweb.model.DevAccount;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
 public class DevAccountService {
+
+    private static Logger logger = LogManager.getLogger(DevAccountService.class);
 
     @Autowired
     private DevAccountRepositoryImpl devAccountRepositoryImpl;
@@ -42,9 +46,11 @@ public class DevAccountService {
             return;
         String otp = Helper.generateOTP();
         account.setOtp(otp);
+        logger.debug("OTP : " + otp);
         try{
             mailService.sendMail(account.getEmail(), "Developer Account Verification", "Please use this code : " + otp + " to verify your account\n\nThank you!");
         }catch(Exception ex){
+            logger.error("Error", ex);
             ex.printStackTrace();
         }
 

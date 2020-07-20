@@ -16,11 +16,15 @@ import com.tony.automationserverweb.model.Application;
 import com.tony.automationserverweb.model.Device;
 import com.tony.automationserverweb.model.User;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
 public class AccountService {
+
+    private static Logger logger = LogManager.getLogger(AccountService.class);
 
     @Autowired
     private AccountRepositoryImpl accountRepositoryImpl;
@@ -54,9 +58,12 @@ public class AccountService {
             return;
         String otp = Helper.generateOTP();
         account.setOtp(otp);
+        logger.debug("OTP : "+ otp);
         try{
             mailService.sendMail(account.getEmail(), "Account Verification", "Please use this code : " + otp + " to verify your account\n\nThank you!");
-        }catch(Exception ex){}
+        }catch(Exception ex){
+            logger.error("Error", ex);
+        }
 
         if(save)
             accountRepositoryImpl.update(account);

@@ -311,39 +311,7 @@
 
                     What you have to do ? <br>
 
-                    <ul>
-                        <li>
-                            Set up the mobile app that you are using by entering the
-                            <ol>
-                                <li>
-                                    Auto generated TOKEN
-                                </li>
-                                <li>
-                                    User key
-                                </li>
-                            </ol>
-                            The user key is the unique identifier of a mobile device.<br>
-                            Currently, you can Control your IoT devices from 4 different mobile device. (for each
-                            account)<br>
-                        </li>
-                        <li>
-                            Create new Devices in the Devices Tab, by giving each device a Unique 'Key' (of 10
-                            characters).
-                            <br>
-                            Currently, you can create up to 4 devices per account.
-                        </li>
-                        <li>
-                            Configure the TOKEN on the IoT device and the "Device Key" for each device.
-                        </li>
-                        <li>
-                            After setting up the required codes, you can access anytime the Devices Tab to check the
-                            availability of your devices.
-                        </li>
-                        <li>
-                            Communication can only be made between a device and user. Users cannot communicate together.
-                            Same for devices.
-                        </li>
-                    </ul>
+                    
                 </p>
             </div>
         </div>

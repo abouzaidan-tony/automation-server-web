@@ -15,6 +15,13 @@ public class DevAccountForm implements Form<DevAccount> {
     private String userPassword2;
     private String userInvoice;
 
+    private Integer q1;
+    private String answer1;
+
+    private Integer q2;
+    private String answer2;
+
+
     private boolean validated;
     private HashMap<String, String> errors;
 
@@ -64,6 +71,21 @@ public class DevAccountForm implements Form<DevAccount> {
 
         if (userInvoice == null)
             userInvoice = "";
+
+        if (q1 == null)
+            errors.put("q1", "Question 1 not set");
+
+        if (q2 == null)
+            errors.put("q2", "Question 2 not set");
+        
+        if(answer1 == null || answer1.trim().length() < 3)
+            errors.put("answer1", "Answer 1 not set");
+
+        if (answer2 == null || answer2.trim().length() < 3)
+            errors.put("answer2", "Answer 2 not set");
+
+        if(q1 != null && q2 != null && q1.equals(q2))
+            errors.put("q2", "Question 1 chosen same as question 2");
 
         // RestTemplate restTemplate = new RestTemplate();
         // HttpHeaders headers = new HttpHeaders();
@@ -134,6 +156,10 @@ public class DevAccountForm implements Form<DevAccount> {
         account.setEmail(userEmail);
         account.setPasswordHash(userPassword);
         account.setUnityInvoice(userInvoice);
+        account.setQ1(q1);
+        account.setQ2(q2);
+        account.setAnswer1(answer1);
+        account.setAnswer2(answer2);
         return account;
     }
 
@@ -159,5 +185,37 @@ public class DevAccountForm implements Form<DevAccount> {
 
     public void setUserPassword2(String userPassword2) {
         this.userPassword2 = userPassword2;
+    }
+
+    public Integer getQ1() {
+        return q1;
+    }
+
+    public void setQ1(Integer q1) {
+        this.q1 = q1;
+    }
+
+    public String getAnswer1() {
+        return answer1;
+    }
+
+    public void setAnswer1(String answer1) {
+        this.answer1 = answer1;
+    }
+
+    public Integer getQ2() {
+        return q2;
+    }
+
+    public void setQ2(Integer q2) {
+        this.q2 = q2;
+    }
+
+    public String getAnswer2() {
+        return answer2;
+    }
+
+    public void setAnswer2(String answer2) {
+        this.answer2 = answer2;
     }
 }

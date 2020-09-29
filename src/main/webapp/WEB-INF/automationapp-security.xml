@@ -5,6 +5,17 @@
 
     <http pattern="/resources/**" security="none" />
 
+    <http use-expressions="true" auto-config="true" pattern="/api/**" create-session="stateless">
+        <intercept-url pattern="/j_spring_security_check" access="permitAll()" />
+        <intercept-url pattern="/api/accessdenied" access="permitAll()" />
+        <intercept-url pattern="/api/login" access="hasRole('ROLE_USER')" />
+        <intercept-url pattern="/api/account/**" access="hasRole('ROLE_USER')" />
+        <intercept-url pattern="/api/dev/**" access="hasRole('ROLE_DEV')" />
+        <custom-filter ref="apiAuthenticationFilter" after="BASIC_AUTH_FILTER"/>
+        <logout logout-success-url="/api/logout" />
+        <csrf disabled="true"/> 
+    </http>
+
     <http use-expressions="true" auto-config="true" pattern="/dev/**">
         <intercept-url pattern="/j_spring_security_check" access="permitAll()" />
         <intercept-url pattern="/accessdenied" access="permitAll()" />
@@ -35,5 +46,15 @@
         <authentication-provider ref="accountAuthenticationProvider"/>
         <authentication-provider ref="devAccountAuthenticationProvider"/>
     </authentication-manager>
+
+    <authentication-manager id="apiAuthManager">
+        <authentication-provider ref="apiTokenAuthenticationProvider" />
+        <authentication-provider ref="accountAuthenticationProvider" />
+        <authentication-provider ref="devAccountAuthenticationProvider" />
+    </authentication-manager>
+
+    <beans:bean id="apiAuthenticationFilter" class="com.tony.automationserverweb.auth.ApiAuthenticationFilter">
+        <beans:constructor-arg ref="apiAuthManager" name="apiAuthManager" />
+    </beans:bean>
 
 </beans:beans>

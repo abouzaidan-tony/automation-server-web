@@ -7,8 +7,10 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.tony.automationserverweb.model.Application;
 import com.tony.automationserverweb.model.User;
 
-@JsonIgnoreProperties({ "validated", "errors" })
+@JsonIgnoreProperties({ "validated", "errors", "mandatoryAppId" })
 public class UserForm implements Form<User> {
+
+    private boolean mandatoryAppId = true;
 
     public String deviceKey;
     public Long applicationId;
@@ -57,5 +59,13 @@ public class UserForm implements Form<User> {
 
     public void setApplicationId(Long applicationId) {
         this.applicationId = applicationId;
+    }
+
+    public boolean isMandatoryAppId() {
+        return mandatoryAppId;
+    }
+
+    public void setMandatoryAppId(boolean mandatoryAppId) {
+        this.mandatoryAppId = mandatoryAppId;
     }
 }

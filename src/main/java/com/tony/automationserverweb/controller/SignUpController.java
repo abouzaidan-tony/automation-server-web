@@ -2,6 +2,7 @@ package com.tony.automationserverweb.controller;
 
 import javax.servlet.http.HttpServletRequest;
 
+import com.tony.automationserverweb.dao.QuestionRepositoryImpl;
 import com.tony.automationserverweb.exception.ApplicationException;
 import com.tony.automationserverweb.form.AccountForm;
 import com.tony.automationserverweb.form.DevAccountForm;
@@ -10,7 +11,6 @@ import com.tony.automationserverweb.model.Account;
 import com.tony.automationserverweb.model.DevAccount;
 import com.tony.automationserverweb.service.AccountService;
 import com.tony.automationserverweb.service.DevAccountService;
-import com.tony.automationserverweb.service.MailService;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -30,7 +30,10 @@ public class SignUpController {
     private DevAccountService devAccountService;
 
     @Autowired
-    private MailService mailService;
+    private QuestionRepositoryImpl questionRepository;
+
+    // @Autowired
+    // private MailService mailService;
 
     @Autowired
     private HttpServletRequest request;
@@ -41,7 +44,8 @@ public class SignUpController {
     }
 
     @GetMapping("/dev/signup")
-    public ModelAndView devSignUpPage(HttpServletRequest request) {
+    public ModelAndView devSignUpPage(HttpServletRequest request, Model model) {
+        model.addAttribute("questions", questionRepository.getAll());
         return new ModelAndView("dev_signup", "devForm", new DevAccountForm());
     }
 
@@ -61,7 +65,7 @@ public class SignUpController {
         try{
             accountService.createAccount(account);
             request.getSession().setAttribute("account", account);
-            return "redirect:/signup/verify";
+            return "redirect:/login";
 
         }catch(ApplicationException ex){
             model.addAttribute("error", ex.getMessage());
@@ -76,6 +80,7 @@ public class SignUpController {
             userForm.setUserPassword(null);
             userForm.setUserPassword2(null);
             model.addAttribute("errors", userForm.getErrors());
+            model.addAttribute("questions", questionRepository.getAll());
             return "dev_signup";
         }
         DevAccount account = userForm.fill();
@@ -109,8 +114,8 @@ public class SignUpController {
         if (account == null)
             return new ModelAndView(url);
 
-        mailService.sendMail(((Account)account).getEmail(), "Developer Account Verification",
-                "Please use this code : " + ((Account) account).getOtp() + " to verify your account\n\nThank you!");
+        // mailService.sendMail(((Account)account).getEmail(), "Developer Account Verification",
+        //         "Please use this code : " + ((Account) account).getOtp() + " to verify your account\n\nThank you!");
 
         return new ModelAndView("verifyAccount", "verifyForm", new VerificationForm());
     }

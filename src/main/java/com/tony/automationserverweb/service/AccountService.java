@@ -19,6 +19,7 @@ import com.tony.automationserverweb.model.User;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -41,37 +42,37 @@ public class AccountService {
     @Autowired
     private MailService mailService;
 
-    public Account createAccount(Account account){
+    public Account createAccount(Account account) {
         account.setPasswordHash(Helper.Encode(account.getPasswordHash()));
         account.setToken(accountRepositoryImpl.generateUniqueToken());
         Integer count = accountRepositoryImpl.getCountUsersByEmail(account.getEmail());
-        if(count != 0)
+        if (count != 0)
             throw new EmailAlreadyExistsException();
-        sendAccountVerification(account, false);
+        //sendAccountVerification(account, false);
         account = accountRepositoryImpl.insert(account);
 
         return account;
     }
 
-    public void sendAccountVerification(Account account, boolean save){
-        if(account == null)
+    public void sendAccountVerification(Account account, boolean save) {
+        if (account == null)
             return;
         String otp = Helper.generateOTP();
         account.setOtp(otp);
-        logger.debug("OTP : "+ otp);
-        try{
-            mailService.sendMail(account.getEmail(), "Account Verification", "Please use this code : " + otp + " to verify your account\n\nThank you!");
-        }catch(Exception ex){
+        logger.debug("OTP : " + otp);
+        try {
+            mailService.sendMail(account.getEmail(), "Account Verification",
+                    "Please use this code : " + otp + " to verify your account\n\nThank you!");
+        } catch (Exception ex) {
             logger.error("Error", ex);
         }
 
-        if(save)
+        if (save)
             accountRepositoryImpl.update(account);
     }
 
-    public boolean verifyAccount(Account account, String otp)
-    {
-        if(!account.getOtp().equals(otp))
+    public boolean verifyAccount(Account account, String otp) {
+        if (!account.getOtp().equals(otp))
             return false;
         account.setOtp(null);
         accountRepositoryImpl.update(account);
@@ -90,8 +91,13 @@ public class AccountService {
         }
         if (duplicate)
             throw new DuplicateDeviceKeyException(user.getKey());
-        Application app = Helper.getAppFromList(account.getSubscriptions(), user.getAppId());
-        if(app == null)
+        Application app;
+        if (user.getAppToken() != null)
+            app = Helper.getAppFromList(account.getSubscriptions(), user.getAppToken());
+        else
+            app = Helper.getAppFromList(account.getSubscriptions(), user.getAppId());
+            
+        if (app == null)
             throw new InvalidApplicationException();
         user.setApplication(app);
         user.setAccount(account);
@@ -117,21 +123,27 @@ public class AccountService {
     }
 
     public Device addDevice(Account account, Device device) {
-        if(account.getDevices().size() > 3)
+        if (account.getDevices().size() > 3)
             throw new MaximumDevicesReachedException();
         boolean duplicate = false;
         for (Device var : account.getDevices()) {
-            if(var.getKey().equals(device.getKey()))
-            {
+            if (var.getKey().equals(device.getKey())) {
                 duplicate = true;
                 break;
             }
         }
-        if(duplicate)
+        if (duplicate)
             throw new DuplicateDeviceKeyException(device.getKey());
-        Application app = Helper.getAppFromList(account.getSubscriptions(), device.getAppId());
-        if(app == null)
+
+        Application app;
+        if (device.getAppToken() != null)
+            app = Helper.getAppFromList(account.getSubscriptions(), device.getAppToken());
+        else
+            app = Helper.getAppFromList(account.getSubscriptions(), device.getAppId());
+
+        if (app == null)
             throw new InvalidApplicationException();
+
         device.setApplication(app);
         device.setAccount(account);
         account.getDevices().add(device);
@@ -159,27 +171,35 @@ public class AccountService {
         return accountRepositoryImpl;
     }
 
-    public Application subscribe(Account account, Application application){
-        if(account.getSubscriptions().size() >=4)
+    public Application subscribe(Account account, Application application) {
+        if (account.getSubscriptions().size() >= 4)
             throw new MaximumSubscriptionException();
         application = applicationRepositoryImpl.findOneByToken(application.getToken());
-        if(application == null)
+        if (application == null)
             return null;
-        if(account.getSubscriptions().contains(application))
+        if (account.getSubscriptions().contains(application))
             return null;
         account.getSubscriptions().add(application);
         accountRepositoryImpl.subscribe(account, application);
         return application;
     }
 
-    public Application unsubscribe(Account account, Application application){
+    public Application unsubscribe(Account account, Application application) {
         application = applicationRepositoryImpl.findOneByToken(application.getToken());
-        if(application == null)
+        if (application == null)
             return null;
-         if(!account.getSubscriptions().contains(application))
+        if (!account.getSubscriptions().contains(application))
             return null;
         account.getSubscriptions().remove(application);
         accountRepositoryImpl.unsubscribe(account, application);
         return application;
+    }
+
+    public Account getAccountDetailsForApplication(long id, String appToken) {
+        Account account = accountRepositoryImpl.getAccountByIdForApplication(id, appToken);
+
+        if (account == null)
+            throw new EmptyResultDataAccessException("Account not found", 1);
+        return account;
     }
 }

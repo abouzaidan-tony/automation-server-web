@@ -2,7 +2,7 @@ package com.tony.automationserverweb.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
-@JsonIgnoreProperties({ "accountId", "account" })
+@JsonIgnoreProperties({ "accountId", "account", "application" })
 public abstract class Client {
 
     private long id;
@@ -33,6 +33,12 @@ public abstract class Client {
         if(application == null)
             return null;
         return application.getId();
+    }
+
+    public String getAppToken() {
+        if (application == null)
+            return null;
+        return application.getToken();
     }
 
     public String getAppName(){

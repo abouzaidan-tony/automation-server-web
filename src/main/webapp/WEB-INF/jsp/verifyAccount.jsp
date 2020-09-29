@@ -46,8 +46,11 @@
                     </span>
 
                     <span>
-                        A code is sent to your email, enter it here:<br>
-                        Please check your junk box too<br>&nbsp;<br>&nbsp;<br>
+                        <!-- A code is sent to your email, enter it here:<br>
+                        Please check your junk box too<br>&nbsp;<br>&nbsp;<br> -->
+                        Currently, verification process for developers is done manually,<br>
+                        Send an email to <a href="mailto:abouzaidan.tony@email.com">abouzaidan.tony@email.com</a> <br>
+                        to get your OTP.
                     </span>
 
                     <div class="wrap-input100 validate-input" data-validate="Minimum length is 3">

@@ -1,13 +1,9 @@
 package com.tony.automationserverweb.auth;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import javax.servlet.http.HttpServletRequest;
 
-import com.tony.automationserverweb.dao.DevAccountRepositoryImpl;
 import com.tony.automationserverweb.helper.Helper;
-import com.tony.automationserverweb.model.DevAccount;
+import com.tony.automationserverweb.model.AuthUser;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationProvider;
@@ -15,8 +11,6 @@ import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -26,37 +20,33 @@ public class DevAccountAuthenticationProvider implements AuthenticationProvider 
     private HttpServletRequest request;
 
     @Autowired
-    private DevAccountRepositoryImpl devAccountRepositoryImpl;
+    private AuthUserService devAccountUserAuthSerivce;
 
     @Override
     public Authentication authenticate(Authentication authentication) throws AuthenticationException {
+
         String email = authentication.getName();
         String password = authentication.getCredentials().toString();
 
-        DevAccount user = devAccountRepositoryImpl.getDevAccountByEmail(email);
+        AuthUser userDetails = devAccountUserAuthSerivce.loadUserByUsername(email);
 
-        if(user == null)
-             throw new BadCredentialsException("Authentication failed for " + email);
-    
-        if(!Helper.EncodingMatches(password, user.getPasswordHash()))
+        if (!Helper.EncodingMatches(password, userDetails.getPassword()))
             throw new BadCredentialsException("Authentication failed for " + email);
 
-        List<GrantedAuthority> grantedAuthorities = new ArrayList<>();
-        if(user.getOtp() == null && user.isVerified())
-            grantedAuthorities.add(new SimpleGrantedAuthority("ROLE_DEV"));
-        else if (user.getOtp() != null)
-            grantedAuthorities.add(new SimpleGrantedAuthority("ROLE_DEV_N"));
-        else
-            throw new BadCredentialsException("Authentication failed for " + email);
+        return createSuccessAuthentication(userDetails.getId(), authentication, userDetails);
+    }
 
-        Authentication auth = new UsernamePasswordAuthenticationToken(user.getId(), user.getPasswordHash(), grantedAuthorities);
-        return auth;
+    private Authentication createSuccessAuthentication(Object principal, Authentication authentication, AuthUser user) {
+        UsernamePasswordAuthenticationToken result = new UsernamePasswordAuthenticationToken(principal,
+                authentication.getCredentials(), user.getAuthorities());
+        result.setDetails("D");
+        return result;
     }
 
     @Override
     public boolean supports(Class<?> authentication) {
-        if(!"/dev/postLogin".equals(request.getRequestURI()))
+        if (!"/dev/postLogin".equals(request.getRequestURI()) && !"/api/dev/login".equals(request.getRequestURI()))
             return false;
-        return authentication.equals(UsernamePasswordAuthenticationToken.class);
+        return UsernamePasswordAuthenticationToken.class.isAssignableFrom(authentication);
     }
 }

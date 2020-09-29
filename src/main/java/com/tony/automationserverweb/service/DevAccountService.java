@@ -25,14 +25,16 @@ public class DevAccountService {
     @Autowired
     private ApplicationRepositoryImpl applicationRepositoryImpl;
 
-    @Autowired
-    private MailService mailService;
+    // @Autowired
+    // private MailService mailService;
 
     public DevAccount createAccount(DevAccount account){
         account.setPasswordHash(Helper.Encode(account.getPasswordHash()));
         Integer count = devAccountRepositoryImpl.getCountAccountsByEmail(account.getEmail());
-        if(account.getUnityInvoice() != null && account.getUnityInvoice().length() != 0)
-            account.setVerified(true);
+        account.setAnswer1(Helper.MD5(account.getAnswer1()));
+        account.setAnswer2(Helper.MD5(account.getAnswer2()));
+        //if(account.getUnityInvoice() != null && account.getUnityInvoice().length() != 0)
+        account.setVerified(true);
         if(count != 0)
             throw new EmailAlreadyExistsException();
         sendAccountVerification(account, false);
@@ -48,10 +50,9 @@ public class DevAccountService {
         account.setOtp(otp);
         logger.debug("OTP : " + otp);
         try{
-            mailService.sendMail(account.getEmail(), "Developer Account Verification", "Please use this code : " + otp + " to verify your account\n\nThank you!");
+            //mailService.sendMail(account.getEmail(), "Developer Account Verification", "Hi,\n\nPlease use this code : " + otp + " to verify your account\n\n\nThank you!");
         }catch(Exception ex){
             logger.error("Error", ex);
-            ex.printStackTrace();
         }
 
         if(save)

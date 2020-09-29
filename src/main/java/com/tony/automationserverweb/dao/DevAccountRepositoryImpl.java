@@ -39,9 +39,9 @@ public class DevAccountRepositoryImpl implements IRepository<DevAccount, Long> {
     private ApplicationRowMapper applicationRowMapper;
 
     private static final String countQuery = "SELECT count(*) FROM dev_account WHERE email = ?";
-    private static final String insertQuery = "INSERT INTO dev_account (email, password, otp, verified, unity_invoice) VALUES (?, ?, ?, ?, ?)";
-    private static final String updateQuery = "UPDATE dev_account SET email = ?, password = ?, otp = ?, verified = ?, unity_invoice = ? WHERE id = ?";
-    private static final String selectQuery = "SELECT dev_account.id account_id, email, password, otp, verified, unity_invoice, application.id app_id, app_name, app_token, dev_account_id FROM dev_account LEFT JOIN application ON application.dev_account_id = dev_account.id ";
+    private static final String insertQuery = "INSERT INTO dev_account (email, password, otp, verified, unity_invoice, q1, q2, ans1, ans2) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
+    private static final String updateQuery = "UPDATE dev_account SET email = ?, password = ?, otp = ?, verified = ?, unity_invoice = ?, q1 = ?, q2 = ?, ans1 = ?, ans2 = ? WHERE id = ?";
+    private static final String selectQuery = "SELECT dev_account.id account_id, email, password, otp, verified, unity_invoice, application.id app_id, app_name, app_token, dev_account_id, q1, q2, ans1 answer1, ans2 answer2 FROM dev_account LEFT JOIN application ON application.dev_account_id = dev_account.id ";
 
     @Override
     @Transactional
@@ -55,6 +55,10 @@ public class DevAccountRepositoryImpl implements IRepository<DevAccount, Long> {
             ps.setString(3, object.getOtp());
             ps.setBoolean(4, object.isVerified());
             ps.setString(5, object.getUnityInvoice());
+            ps.setInt(6, object.getQ1());
+            ps.setInt(7, object.getQ2());
+            ps.setString(8, object.getAnswer1());
+            ps.setString(9, object.getAnswer2());
             return ps;
         }, keyHolder);
 
@@ -77,7 +81,11 @@ public class DevAccountRepositoryImpl implements IRepository<DevAccount, Long> {
             ps.setString(3, object.getOtp());
             ps.setBoolean(4, object.isVerified());
             ps.setString(5, object.getUnityInvoice());
-            ps.setLong(6, object.getId());
+            ps.setInt(6, object.getQ1());
+            ps.setInt(7, object.getQ2());
+            ps.setString(8, object.getAnswer1());
+            ps.setString(9, object.getAnswer2());
+            ps.setLong(10, object.getId());
             return ps;
         });
         return object;

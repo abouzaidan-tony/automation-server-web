@@ -1,5 +1,8 @@
 package com.tony.automationserverweb.helper;
 
+import java.security.MessageDigest;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -50,11 +53,40 @@ public class Helper {
         return encoder.matches(password, encodedPassword);
     }
 
-    public static Application getAppFromList(List<Application> apps, final Long id){
+    public static Application getAppFromList(List<Application> apps, final Long id) {
         Optional<Application> application = apps.stream().filter(app -> app.getId().equals(id)).findFirst();
-        if(application.isPresent())
+        if (application.isPresent())
             return application.get();
         return null;
+    }
+
+    public static Application getAppFromList(List<Application> apps, final String token) {
+        Optional<Application> application = apps.stream().filter(app -> app.getToken().equals(token)).findFirst();
+        if (application.isPresent())
+            return application.get();
+        return null;
+    }
+
+    public static Date addDaysToDate(Date date, int days) {
+        Calendar c = Calendar.getInstance();
+        c.setTime(date);
+        c.add(Calendar.DAY_OF_MONTH, days);
+        return c.getTime();
+    }
+
+    public static String MD5(String input) {
+        try {
+            MessageDigest m = MessageDigest.getInstance("MD5");
+            byte[] digest = m.digest(input.getBytes());
+            StringBuffer sb = new StringBuffer();
+            for (int i = 0; i < digest.length; ++i) {
+                sb.append(Integer.toHexString((digest[i] & 0xFF) | 0x100).substring(1, 3));
+            }
+            return sb.toString();
+        } catch (Exception ex) {
+            return input;
+        }
+
     }
 
 }

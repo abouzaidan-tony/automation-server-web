@@ -45,6 +45,8 @@ public class AccountService {
     public Account createAccount(Account account) {
         account.setPasswordHash(Helper.Encode(account.getPasswordHash()));
         account.setToken(accountRepositoryImpl.generateUniqueToken());
+        account.setAnswer1(Helper.MD5(account.getAnswer1()));
+        account.setAnswer2(Helper.MD5(account.getAnswer2()));
         Integer count = accountRepositoryImpl.getCountUsersByEmail(account.getEmail());
         if (count != 0)
             throw new EmailAlreadyExistsException();

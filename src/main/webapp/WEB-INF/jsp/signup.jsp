@@ -138,6 +138,38 @@
                         </span>
                     </div>
 
+                    <div class="wrap-input100 validate-input" data-validate="Question 1 required">
+                        <form:select path="q1" multiple="false">
+                            <c:forEach items="${questions}" var="q">
+                                <form:option value="${q.id}">${q.question}</form:option>
+                            </c:forEach>
+                        </form:select>
+                    </div>
+                    
+                    <div class="wrap-input100 validate-input" data-validate="Answer required">
+                        <form:input path="answer1" class="input100" type="text" name="answer1" placeholder="Answer 1" />
+                        <span class="focus-input100"></span>
+                        <span class="symbol-input100">
+                            <i class="fa fa-question" aria-hidden="true"></i>
+                        </span>
+                    </div>
+                    
+                    <div class="wrap-input100 validate-input" data-validate="Question required">
+                        <form:select path="q2" multiple="false">
+                            <c:forEach items="${questions}" var="q">
+                                <form:option value="${q.id}">${q.question}</form:option>
+                            </c:forEach>
+                        </form:select>
+                    </div>
+                    
+                    <div class="wrap-input100 validate-input" data-validate="Answer required">
+                        <form:input path="answer2" class="input100" type="text" name="answer2" placeholder="Answer 2" />
+                        <span class="focus-input100"></span>
+                        <span class="symbol-input100">
+                            <i class="fa fa-question" aria-hidden="true"></i>
+                        </span>
+                    </div>
+
                     <ul>
                         <c:if test="${not empty error}">
                             <li style="color:red">${error}</li>

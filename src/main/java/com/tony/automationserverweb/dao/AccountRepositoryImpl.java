@@ -54,13 +54,13 @@ public class AccountRepositoryImpl implements IRepository<Account, Long> {
     private ApplicationRowMapper applicationRowMapper;
 
     private static final String countQuery = "SELECT count(*) FROM account WHERE email = ?";
-    private static final String insertQuery = "INSERT INTO account (email, password, token, nickname, otp) VALUES (?, ?, ?, ?, ?)";
-    private static final String updateQuery = "UPDATE account SET email = ?, password = ?, token = ?, nickname = ?, otp = ? WHERE id = ?";
+    private static final String insertQuery = "INSERT INTO account (email, password, token, nickname, otp, q1, q2, ans1, ans2) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
+    private static final String updateQuery = "UPDATE account SET email = ?, password = ?, token = ?, nickname = ?, otp = ?, q1 = ?, q2 = ?, ans1 = ?, ans2 = ? WHERE id = ?";
     // private static final String selectQuery = "SELECT account.id account_id, nickname, email, password, token, otp, device.id device_id, device_key, device.connected d_connected, user.id user_id, user_key, user.connected u_connected FROM account LEFT JOIN device ON account.id = device.account_id LEFT JOIN user ON account.id = user.account_id LEFT JOIN subscriptions ON subscriptions.account_id = account.id LEFT JOIN application ON application.id = subscriptions.app_id ";
-    private static final String selectQuery = "SELECT * FROM (SELECT 1 x, account.id account_id, nickname, email, password, token, otp, null device_id, null device_key, null d_connected, null user_id, null user_key, null u_connected, null app_id, null app_name, null app_token, null dev_account_id FROM account "+
-    "UNION ALL SELECT 2, subscriptions.account_id, null, null, null, null, null, null, null, null, null, null, null, application.id app_id, app_name, app_token, dev_account_id FROM application INNER JOIN subscriptions ON subscriptions.app_id = application.id INNER JOIN account ON account.id = subscriptions.account_id "+
-    "UNION ALL SELECT 3, device.account_id, null, null, null, null, null, device.id device_id, device_key, device.connected d_connected, null, null, null, device.app_id, null, app_token, null FROM device LEFT JOIN application ON device.app_id = application.id "+
-    "UNION ALL SELECT 4, user.account_id, null, null, null, null, null, null, null, null, user.id user_id, user_key, user.connected u_connected, user.app_id, null, app_token, null FROM user LEFT JOIN application ON user.app_id = application.id) a ";
+    private static final String selectQuery = "SELECT * FROM (SELECT 1 x, account.id account_id, nickname, email, password, token, otp, null device_id, null device_key, null d_connected, null user_id, null user_key, null u_connected, null app_id, null app_name, null app_token, null dev_account_id, q1, q2, ans1, ans2 FROM account "+
+    "UNION ALL SELECT 2, subscriptions.account_id, null, null, null, null, null, null, null, null, null, null, null, application.id app_id, app_name, app_token, dev_account_id, null, null, null, null FROM application INNER JOIN subscriptions ON subscriptions.app_id = application.id INNER JOIN account ON account.id = subscriptions.account_id "+
+    "UNION ALL SELECT 3, device.account_id, null, null, null, null, null, device.id device_id, device_key, device.connected d_connected, null, null, null, device.app_id, null, app_token, null, null, null, null, null FROM device LEFT JOIN application ON device.app_id = application.id "+
+    "UNION ALL SELECT 4, user.account_id, null, null, null, null, null, null, null, null, user.id user_id, user_key, user.connected u_connected, user.app_id, null, app_token, null, null, null, null, null FROM user LEFT JOIN application ON user.app_id = application.id) a ";
     private static final String uniqueTokenQuery = "SELECT COUNT(*) FROM account WHERE token = ?";
     private static final String orderBySelect = " ORDER BY account_id, x";
     private static final String subscribeQuery = "INSERT INTO subscriptions (account_id, app_id) VALUES (?, ?)";
@@ -78,6 +78,10 @@ public class AccountRepositoryImpl implements IRepository<Account, Long> {
             ps.setString(3, object.getToken());
             ps.setString(4, object.getNickname());
             ps.setString(5, object.getOtp());
+            ps.setInt(6, object.getQ1());
+            ps.setInt(7, object.getQ2());
+            ps.setString(8, object.getAnswer1());
+            ps.setString(9, object.getAnswer2());
             return ps;
         }, keyHolder);
 
@@ -103,7 +107,11 @@ public class AccountRepositoryImpl implements IRepository<Account, Long> {
             ps.setString(3, object.getToken());
             ps.setString(4, object.getNickname());
             ps.setString(5, object.getOtp());
-            ps.setLong(6, object.getId());
+            ps.setInt(6, object.getQ1());
+            ps.setInt(7, object.getQ2());
+            ps.setString(8, object.getAnswer1());
+            ps.setString(9, object.getAnswer2());
+            ps.setLong(10, object.getId());
             return ps;
         });
         return object;

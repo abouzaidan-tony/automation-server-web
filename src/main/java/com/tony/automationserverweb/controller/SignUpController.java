@@ -39,7 +39,8 @@ public class SignUpController {
     private HttpServletRequest request;
 
     @GetMapping("/signup")
-    public ModelAndView signUpPage(HttpServletRequest request){
+    public ModelAndView signUpPage(HttpServletRequest request, Model model){
+        model.addAttribute("questions", questionRepository.getAll());
         return new ModelAndView("signup", "userForm", new AccountForm());
     }
 
@@ -56,6 +57,7 @@ public class SignUpController {
             userForm.setUserPassword(null);
             userForm.setUserPassword2(null);
             model.addAttribute("errors", userForm.getErrors());
+            model.addAttribute("questions", questionRepository.getAll());
             return "signup";
         }
         Account account = userForm.fill();

@@ -41,11 +41,14 @@ public class DeviceForm implements Form<Device> {
             return;
         validated = true;
 
-        if (deviceKey != null && deviceKey.length() != 5)
+        if (deviceKey == null || deviceKey.length() != 5)
             errors.put("deviceKey", "Device Key must be 5 characters");
 
         if (mandatoryAppId && applicationId == null)
             errors.put("Application", "Application identifier not provided");
+
+        if ("CLOUD".equals(deviceKey))
+            errors.put("deviceKey", "CLOUD is a reserved name");
     }
 
     public Device fill() {

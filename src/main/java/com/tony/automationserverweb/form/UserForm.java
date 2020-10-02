@@ -41,8 +41,11 @@ public class UserForm implements Form<User> {
             return;
         validated = true;
 
-        if (deviceKey != null && deviceKey.length() != 5)
+        if (deviceKey == null || deviceKey.length() != 5)
             errors.put("deviceKey", "Device Key must be 5 characters");
+        
+        if("CLOUD".equals(deviceKey))
+            errors.put("deviceKey", "CLOUD is a reserved name");
     }
 
     public User fill(){

@@ -210,13 +210,11 @@
                                 <li>
                                     For sending Messages, build a message for sending it.<br>
                                     <code>
-                                                            Message m = new MessageBuilder()<br>
+                                                            Message m = new DataMessageBuilder()()<br>          
                                                             &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                                                                        .setMessgeType(MessageType.DATA)<br>
+                                                                        .setMessage("Hello From Unity!!!")<br>
                                                             &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                                                                        .setMessage("HELLO")<br>
-                                                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                                                                        .setToDeviceAddress("DESTINATION DEVICE CODE")<br>
+                                                                        .setDeviceKey("DESTINATION DEVICE CODE")<br>
                                                             &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                                                                         .build();<br>
                                                             session.sendMessage(m);<br>

@@ -49,6 +49,7 @@ public class AccountController {
     public @ResponseBody Object removeDevice(@RequestBody DeviceForm deviceForm) {
         Long userId = (Long) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         Account u = accountService.getAccountRepositoryImpl().findOneById(userId);
+        deviceForm.setMandatoryAppId(false);
         if (deviceForm.hasErrors())
             return new ResponseEntity<>(new Response(false, deviceForm.getErrors()), HttpStatus.OK);
         Device d = deviceForm.fill();

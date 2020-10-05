@@ -156,14 +156,14 @@
                             </li>
                         </ol>
                         The user key is the unique identifier of a mobile device.<br>
-                        Currently, you can Control your IoT devices from 4 different mobile device. (for each
-                        account)<br>
+                        <!-- Currently, you can Control your IoT devices from 4 different mobile device. (for each
+                        account)<br> -->
                     </li>
                     <li>
-                        Create new Devices in the Devices Tab, by giving each device a Unique 'Key' (of 10
+                        Create new Devices in the Devices Tab, by giving each device a Unique 'Key' (of 5
                         characters).
                         <br>
-                        Currently, you can create up to 4 devices per account.
+                        <!-- Currently, you can create up to 4 devices per account. -->
                     </li>
                     <li>
                         Configure the TOKEN on the IoT device and the "Device Key" for each device.
@@ -210,7 +210,7 @@
                                 <li>
                                     For sending Messages, build a message for sending it.<br>
                                     <code>
-                                                            Message m = new DataMessageBuilder()()<br>          
+                                                            Message m = new DataMessageBuilder()<br>          
                                                             &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                                                                         .setMessage("Hello From Unity!!!")<br>
                                                             &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;

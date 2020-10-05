@@ -112,7 +112,7 @@ jQuery("#btnAddDeviceKey").click(function () {
             }
             var dev = data['data'];
             jQuery("#deviceKeyInput").val('')
-            table.append("<tr><td class=\"deviceCount\"> " + count + "</td><td class=\"deviceKey\"> " + dev['key'] + "</td><td>"+dev['application']['name']+"</td><td><span class=\"dot red\"></span></td> <td> <button class=\"btn btn-danger removeDevice\">Remove Device</button></td></tr>");
+            table.append("<tr><td class=\"deviceCount\"> " + count + "</td><td class=\"deviceKey\"> " + dev['key'] + "</td><td>"+dev['appName']+"</td><td><span class=\"dot red\"></span></td> <td> <button class=\"btn btn-danger removeDevice\">Remove Device</button></td></tr>");
         }
     })
 })
@@ -143,7 +143,7 @@ jQuery("#btnAddUserKey").click(function () {
             }
             jQuery("#userKeyInput").val('')
             var dev = data['data'];
-            table.append("<tr><td class=\"deviceCount\"> " + count + "</td><td class=\"deviceKey\"> " + dev['key'] + "</td><td>"+dev['application']['name']+"</td><td><span class=\"dot red\"></span></td> <td> <button class=\"btn btn-danger removeUser\">Remove Use</button></td></tr>");
+            table.append("<tr><td class=\"deviceCount\"> " + count + "</td><td class=\"deviceKey\"> " + dev['key'] + "</td><td>"+dev['appName']+"</td><td><span class=\"dot red\"></span></td> <td> <button class=\"btn btn-danger removeUser\">Remove Use</button></td></tr>");
         }
     })
 })

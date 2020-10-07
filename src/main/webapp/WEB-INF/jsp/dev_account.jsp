@@ -34,7 +34,7 @@
                 <a href="#" class="list-group-item list-group-item-action bg-light" data-for-page="page6">Developers</a>
                 <a href="<c:url value="/resources/plugin/wifiplugin.unitypackage" />" target="_blank" class="list-group-item list-group-item-action bg-light">Get Unity Plugin</a>
                 <a href="<c:url value=" /resources/plugin/ArduinoWifi.zip" />" target="_blank" class="list-group-item list-group-item-action bg-light">Get ESP32 Plugin</a>
-                <a href="<c:url value=" /resources/plugin/AUTOMATION_SERVER.postman_collection.json" />" target="_blank" class="list-group-item list-group-item-action bg-light">Get API Collection</a>
+                <a href="<c:url value=" /resources/plugin/AUTOMATION_SERVER.postman_collection.json" / download="AUTOMATION_SERVER.postman_collection.json">" target="_blank" class="list-group-item list-group-item-action bg-light">Get API Collection</a>
                 <!-- <a href="#" class="list-group-item list-group-item-action bg-light">Overview</a>
                 <a href="#" class="list-group-item list-group-item-action bg-light">Events</a>
                 <a href="#" class="list-group-item list-group-item-action bg-light">Profile</a>

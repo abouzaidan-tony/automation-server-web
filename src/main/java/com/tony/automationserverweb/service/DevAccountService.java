@@ -37,7 +37,7 @@ public class DevAccountService {
         account.setVerified(true);
         if(count != 0)
             throw new EmailAlreadyExistsException();
-        sendAccountVerification(account, false);
+        //sendAccountVerification(account, false);
         account = devAccountRepositoryImpl.insert(account);
 
         return account;

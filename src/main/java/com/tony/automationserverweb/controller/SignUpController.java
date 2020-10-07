@@ -65,9 +65,12 @@ public class SignUpController {
         userForm.setUserPassword2(null);
 
         try{
-            accountService.createAccount(account);
+            account = accountService.createAccount(account);
             request.getSession().setAttribute("account", account);
-            return "redirect:/login";
+            if (account.getOtp() != null)
+                return "redirect:/signup/verify";
+            else
+                return "redirect:/login";
 
         }catch(ApplicationException ex){
             model.addAttribute("error", ex.getMessage());
@@ -90,9 +93,12 @@ public class SignUpController {
         userForm.setUserPassword2(null);
 
         try {
-            devAccountService.createAccount(account);
+            account = devAccountService.createAccount(account);
             request.getSession().setAttribute("account", account);
-            return "redirect:/dev/signup/verify";
+            if (account.getOtp() != null)
+                return "redirect:/dev/signup/verify";
+            else
+                return "redirect:/dev/login";
 
         } catch (ApplicationException ex) {
             model.addAttribute("error", ex.getMessage());

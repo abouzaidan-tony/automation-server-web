@@ -329,8 +329,7 @@
                                     To send Message:<br>
                                     <code>
                                                             int messageToSendLength = 15;<br>
-                                                            bool keepAlive = true; // if set to false, the connection will be closed after this message.<br>
-                                                            Message m(DATA, "DeviceCode", "Message to send", messageToSendLength, keepAlive);<br>
+                                                            Message m(DATA, "DeviceCode", "Message to send", messageToSendLength, true);<br>
                                                             session.sendMessage(m);
                                                         </code>
                                 </li>

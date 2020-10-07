@@ -203,7 +203,7 @@
                                                             session.OnConnected += Connected;<br>
                                                             session.onMessageReady += Receive;<br>
                                                             session.OnConnectionFailed += Failed;<br>
-                                                            OnAuthenticationFailed += () =&gt; {<br>
+                                                            session.OnAuthenticationFailed += () =&gt; {<br>
                                                             &nbsp;&nbsp;&nbsp;&nbsp;Debug.Log("Auth Failed");<br>
                                                             };<br>
                                                         </code>
@@ -226,13 +226,11 @@
                                     To send binary data, build a binary message:<br>
                                     <code>
                                                             byte[] messageBytes = {0x62, 0x69, 0x6e, 0x61, 0x72, 0x79, 0x20, 0x74, 0x65, 0x78, 0x74};<br>
-                                                            Message msg = new MessageBuilder()<br>
-                                                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                                                                        .setMessgeType(MessageType.DATA)<br>
+                                                            Message m = new DataMessageBuilder()<br>
                                                             &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                                                                         .setMessage(messageBytes)<br>
                                                             &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                                                                        .setToDeviceAddress("DESTINATION DEVICE CODE")<br>
+                                                                        .setDeviceKey("DESTINATION DEVICE CODE")<br>
                                                             &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                                                                         .build();<br>
                                                             session.sendMessage(msg);<br>

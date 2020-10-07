@@ -1,0 +1,226 @@
+{
+	"info": {
+		"_postman_id": "0ae0b372-4766-4c5a-9550-e300e9b3d56c",
+		"name": "AUTOMATION SERVER",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Login",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"email\":\"abouzaidan.tony@gmail.com\",\n\t\"password\":\"password\",\n\t\"application\":\"your app token\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://automation-server.ddns.net/api/login",
+					"protocol": "http",
+					"host": [
+						"automation-server",
+						"ddns",
+						"net"
+					],
+					"path": [
+						"api",
+						"login"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Devices",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"type": "text",
+						"value": "application/json"
+					},
+					{
+						"key": "Token",
+						"value": "A8Y7MJEFLU9G5O1HP5ME3C2JSJ702ZE25IWYFMB68KHB6V",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "http://automation-server.ddns.net/api/account/devices",
+					"protocol": "http",
+					"host": [
+						"automation-server",
+						"ddns",
+						"net"
+					],
+					"path": [
+						"api",
+						"account",
+						"devices"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Subscribe to application",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"type": "text",
+						"value": "application/json"
+					},
+					{
+						"key": "Token",
+						"type": "text",
+						"value": "A8Y7MJEFLU9G5O1HP5ME3C2JSJ702ZE25IWYFMB68KHB6V"
+					}
+				],
+				"url": {
+					"raw": "http://automation-server.ddns.net/api/account/app/subscribe",
+					"protocol": "http",
+					"host": [
+						"automation-server",
+						"ddns",
+						"net"
+					],
+					"path": [
+						"api",
+						"account",
+						"app",
+						"subscribe"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Add Device",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"type": "text",
+						"value": "application/json"
+					},
+					{
+						"key": "Token",
+						"type": "text",
+						"value": "A8Y7MJEFLU9G5O1HP5ME3C2JSJ702ZE25IWYFMB68KHB6V"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"deviceKey\":\"12345\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://automation-server.ddns.net/api/account/device/add",
+					"protocol": "http",
+					"host": [
+						"automation-server",
+						"ddns",
+						"net"
+					],
+					"path": [
+						"api",
+						"account",
+						"device",
+						"add"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Remove Device",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"type": "text",
+						"value": "application/json"
+					},
+					{
+						"key": "Token",
+						"value": "A8Y7MJEFLU9G5O1HP5ME3C2JSJ702ZE25IWYFMB68KHB6V",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"deviceKey\":\"12345\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://automation-server.ddns.net/api/account/device/remove",
+					"protocol": "http",
+					"host": [
+						"automation-server",
+						"ddns",
+						"net"
+					],
+					"path": [
+						"api",
+						"account",
+						"device",
+						"remove"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"id": "5e551223-8521-44e3-b5a1-209708d12848",
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"id": "5edc4996-42b0-499a-9cb9-2b111243ed1d",
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"protocolProfileBehavior": {}
+}

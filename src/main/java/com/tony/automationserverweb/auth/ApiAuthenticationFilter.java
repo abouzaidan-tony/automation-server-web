@@ -7,6 +7,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.tony.automationserverweb.model.AccountSession;
 import com.tony.automationserverweb.model.ApplicationAccountTokenAuthentication;
 import com.tony.automationserverweb.service.AccountSessionService;
 
@@ -66,10 +67,10 @@ public class ApiAuthenticationFilter extends AbstractAuthenticationProcessingFil
             if (authResult instanceof ApplicationAccountTokenAuthentication)
                 applicationToken = ((ApplicationAccountTokenAuthentication) authResult).getApplicationToken();
 
-            accountSessionService.createAccountSession((Long) authResult.getPrincipal(),
+            AccountSession as = accountSessionService.createAccountSession((Long) authResult.getPrincipal(),
                     (String) authResult.getDetails(), applicationToken);
 
-            response.addHeader("Token", token);
+            response.addHeader("Token", as.getToken());
         }
 
         SecurityContextHolder.getContext().setAuthentication(authResult);

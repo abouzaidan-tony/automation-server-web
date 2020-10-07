@@ -32,7 +32,8 @@
                 <a href="#" class="list-group-item list-group-item-action bg-light" data-for-page="page4">Statistics</a>
                 <a href="#" class="list-group-item list-group-item-action bg-light" data-for-page="page5">Help</a>
                 <a href="#" class="list-group-item list-group-item-action bg-light" data-for-page="page6">Developers</a>
-                <a href="<c:url value="/resources/plugin/wifiplugin.unitypackage" />" target="_blank" class="list-group-item list-group-item-action bg-light">Download Plugin</a>
+                <a href="<c:url value="/resources/plugin/wifiplugin.unitypackage" />" target="_blank" class="list-group-item list-group-item-action bg-light">Get Unity Plugin</a>
+                <a href="<c:url value=" /resources/plugin/ArduinoWifi.zip" />" target="_blank" class="list-group-item list-group-item-action bg-light">Get ESP32 Plugin</a>
                 <!-- <a href="#" class="list-group-item list-group-item-action bg-light">Overview</a>
                 <a href="#" class="list-group-item list-group-item-action bg-light">Events</a>
                 <a href="#" class="list-group-item list-group-item-action bg-light">Profile</a>

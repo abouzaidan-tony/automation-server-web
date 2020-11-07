@@ -29,7 +29,7 @@ public class AccountAuthenticationProvider implements AuthenticationProvider {
 
     @Override
     public Authentication authenticate(Authentication authentication) throws AuthenticationException {
-        String email = authentication.getName();
+        String email = authentication.getName().toLowerCase();
         String password = authentication.getCredentials().toString();
 
         AuthUser userDetails = accountUserAuthSerivce.loadUserByUsername(email);

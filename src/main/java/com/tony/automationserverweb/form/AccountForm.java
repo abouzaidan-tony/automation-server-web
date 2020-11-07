@@ -96,7 +96,7 @@ public class AccountForm implements Form<Account> {
 
     public Account fill(){
         Account account = new Account();
-        account.setEmail(userEmail);
+        account.setEmail(userEmail.toLowerCase());
         account.setPasswordHash(userPassword);
         account.setNickname(userNickname);
         account.setQ1(q1);

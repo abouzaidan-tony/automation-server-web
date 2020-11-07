@@ -50,7 +50,7 @@ public class LoginForm implements Form<Void> {
     }
 
     public String getEmail() {
-        return email;
+        return email.toLowerCase();
     }
 
     public void setEmail(String email) {

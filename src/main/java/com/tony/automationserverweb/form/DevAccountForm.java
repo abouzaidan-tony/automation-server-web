@@ -153,7 +153,7 @@ public class DevAccountForm implements Form<DevAccount> {
 
     public DevAccount fill(){
         DevAccount account = new DevAccount();
-        account.setEmail(userEmail);
+        account.setEmail(userEmail.toLowerCase());
         account.setPasswordHash(userPassword);
         account.setUnityInvoice(userInvoice);
         account.setQ1(q1);

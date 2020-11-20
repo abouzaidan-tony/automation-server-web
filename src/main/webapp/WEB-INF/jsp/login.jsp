@@ -27,6 +27,9 @@
     <!--===============================================================================================-->
     <link rel="stylesheet" type="text/css" href="<c:url value="/resources/css/util.css" />">
     <link rel="stylesheet" type="text/css" href="<c:url value="/resources/css/main.css" />">
+
+    <script data-ad-client="ca-pub-1881440802966359" async
+        src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
     <!--===============================================================================================-->
 </head>
 
